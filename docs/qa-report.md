@@ -6,7 +6,7 @@ Scope: final local validation of `aiplus-auto-compact` before approved GitHub pu
 
 LOCAL PASS.
 
-Required local validation passed. GitHub remote/latest-commit verification is deferred until after `git init`, initial commit, repo creation, and push. No npm publish, tag, GitHub Release, marketplace submission, global install, or `$CODEX_HOME` modification was performed.
+Required local validation passed. GitHub remote/latest-commit verification was completed after repo creation and push. No npm publish, tag, GitHub Release, marketplace submission, global install, or `$CODEX_HOME` modification was performed.
 
 ## Commands and Results
 
@@ -64,4 +64,4 @@ No local QA blocker found.
 
 ## Handoff
 
-Recommended next action: initialize the `aiplus-auto-compact` git repository, create the approved public GitHub repo, push the local PASS state, then verify remote URL and latest commit hash.
+Recommended next action: monitor the public GitHub repo and keep any future npm/package registry publish, tags, GitHub Releases, marketplace submissions, global installs, and `$CODEX_HOME` changes behind separate Owner approval.

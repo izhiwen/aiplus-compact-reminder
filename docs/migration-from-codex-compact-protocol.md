@@ -96,7 +96,13 @@ Then use the namespaced commands to guide validation, checkpoint, and resume. Th
 
 ## OpenCode Users
 
-There is no dedicated OpenCode adapter in this repository. Use the shared core CLI directly and document any OpenCode-specific compact behavior in `current-handoff.md`.
+Use the OpenCode adapter when project-local config, commands, agents, and prompts are useful:
+
+```bash
+cp <REPO_ROOT>/aiplus-auto-compact/adapters/opencode/opencode.json.example <TARGET_PROJECT>/.opencode/opencode.json
+```
+
+Merge rather than overwrite if the target project already has `.opencode/opencode.json`. The shared core CLI remains the source of structural validation, and OpenCode compact/session controls remain manual.
 
 ## Review Checklist
 

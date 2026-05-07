@@ -4,9 +4,9 @@ Scope: local QA/release readiness review for `aiplus-auto-compact`.
 
 ## Gate Status
 
-LOCAL PASS BEFORE GITHUB PUBLICATION.
+PASS.
 
-Local validation passed. GitHub remote/latest-commit verification must be performed after `git init`, initial commit, and push because this directory starts as a non-git local project tree.
+Local validation passed before GitHub publication. GitHub publication was then completed for `https://github.com/izhiwen/aiplus-auto-compact`, with `main` tracking `origin/main`.
 
 ## Required Checks
 
@@ -22,7 +22,7 @@ Local validation passed. GitHub remote/latest-commit verification must be perfor
 | Private-data scan | PASS | No real private data found; expected policy/detector matches only |
 | Old Codex-only branding in root/core | PASS WITH CAVEAT | `.codex/compact` compatibility paths remain intentionally documented in core; no release blocker |
 | No npm publish/tag/release | PASS | No package publish, tag, GitHub Release, marketplace submission, or global install performed |
-| GitHub remote URL/latest commit after push | PENDING | Complete only after final GitHub publication step |
+| GitHub remote URL/latest commit after push | PASS | `origin` points to `https://github.com/izhiwen/aiplus-auto-compact.git`; latest commit is recorded by `git log -1 --oneline` |
 
 ## Final Rerun Commands
 
