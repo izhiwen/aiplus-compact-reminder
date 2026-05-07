@@ -1,0 +1,17 @@
+# Changelog
+
+All notable public documentation changes for AiPlus Auto Compact are recorded here.
+
+## Unreleased
+
+- Added root public README with Codex, Claude Code, and OpenCode quick starts.
+- Added shared core versus adapter explanation.
+- Added runtime comparison table for recommended v0.2 usage.
+- Added safety, privacy, validation, contribution, and release-status guidance.
+- Added migration notes from `codex-compact-protocol`.
+- Added synthetic examples for Codex, Claude Code, and OpenCode projects.
+- Added release checklist, security policy, and module map.
+
+## 0.1.0
+
+- Initial private workspace package with shared core protocol files, Codex adapter assets, Claude Code adapter assets, and acceptance tests.
