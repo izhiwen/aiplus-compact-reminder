@@ -14,7 +14,8 @@ This directory contains project-local OpenCode assets for the AiPlus compact che
 
 ## Project-Local Setup
 
-Ordinary users should install the project-local adapter through Rust `aiplus`:
+Ordinary users should install the project-local adapter through the AiPlus CLI
+(`aiplus`):
 
 ```bash
 cd <TARGET_PROJECT>
@@ -74,7 +75,7 @@ They are designed for a Plan/Build style workflow:
 
 ## Core CLI Reference
 
-When shell validation is needed, use Rust `aiplus`:
+When shell validation is needed, use the AiPlus CLI (`aiplus`):
 
 ```bash
 aiplus compact validate

@@ -5,9 +5,9 @@ This guide is for users moving from `codex-compact-protocol` to AiPlus Auto Comp
 ## What Changed
 
 AiPlus Auto Compact keeps the compact/resume state model, but changes the
-ordinary-user path to the Rust `aiplus` CLI:
+ordinary-user path to the AiPlus CLI (`aiplus`):
 
-- Rust `aiplus` is the current user-facing CLI.
+- AiPlus CLI (`aiplus`) is the current user-facing CLI.
 - `aiplus-auto-compact` is the compact/checkpoint/resume workflow module.
 - `core/scripts/compactctl.mjs` is retained as a legacy standalone helper and
   compatibility reference.
@@ -74,7 +74,7 @@ Use `--force` only when `<OWNER>` intends to replace existing compact files with
 
 ## Codex Users
 
-Use Rust `aiplus` as the default workflow:
+Use AiPlus CLI (`aiplus`) as the default workflow:
 
 ```bash
 cd <TARGET_PROJECT>

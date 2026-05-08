@@ -1,6 +1,8 @@
 # Codex Adapter
 
-This adapter preserves the proven Codex compact/resume workflow from `codex-compact-protocol` while aligning ordinary users with the Rust `aiplus` CLI.
+This adapter preserves the proven Codex compact/resume workflow from
+`codex-compact-protocol` while aligning ordinary users with the AiPlus CLI
+(`aiplus`).
 
 ## What It Does
 
@@ -45,4 +47,4 @@ This keeps Codex behavior aligned with Claude Code and OpenCode adapters.
 
 `../../core/scripts/compactctl.mjs` remains available as a legacy standalone
 helper for audits and compatibility tests, but it is not the ordinary-user
-Rust `aiplus` path.
+AiPlus CLI (`aiplus`) path.

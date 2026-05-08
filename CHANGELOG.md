@@ -4,8 +4,10 @@ All notable public documentation changes for AiPlus Auto Compact are recorded he
 
 ## Unreleased
 
-- Reworked `README.md` for Rust `aiplus` first ordinary-user guidance.
+- Reworked `README.md` for AiPlus CLI (`aiplus`) first ordinary-user guidance.
 - Added `README.zh-CN.md` with matching beginner flow.
+- Clarified naming: `AiPlus` is the product/module brand, while `aiplus` is
+  reserved for CLI commands, repo names, paths, and code identifiers.
 - Repositioned `compactctl.mjs` as a legacy standalone helper rather than the
   ordinary-user path.
 - Updated adapter and synthetic example docs to use `aiplus install ...` and

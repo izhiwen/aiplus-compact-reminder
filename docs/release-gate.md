@@ -1,7 +1,7 @@
 # Release Gate
 
-Scope: local QA/release readiness review for the Rust-first
-`aiplus-auto-compact` documentation update.
+Scope: local QA/release readiness review for the AiPlus CLI (`aiplus`)
+documentation update in `aiplus-auto-compact`.
 
 ## Gate Status
 
@@ -17,10 +17,10 @@ to `https://github.com/izhiwen/aiplus-auto-compact`.
 | --- | --- | --- |
 | `core/scripts/compactctl.mjs` syntax | PASS | `rtk node --check core/scripts/compactctl.mjs`, exit 0 |
 | Test suite | PASS | `rtk npm test`, 15/15 acceptance tests passed |
-| Rust `aiplus` alignment | PASS | `rtk cargo test` in `<AIPLUS_SOURCE>/aiplus-rust`, 6/6 tests passed; `cargo run -p aiplus-cli -- --help` shows `compact` |
+| AiPlus CLI alignment | PASS | `rtk cargo test` from the sibling `../aiplus-rust` checkout, 6/6 tests passed; `cargo run -p aiplus-cli -- --help` shows `compact` |
 | Manifest/config JSON parse | PASS | Parsed package metadata, Codex plugin manifest, Claude plugin manifest, Claude hook example, and OpenCode config example |
 | Adapter required files | PASS | Required Codex, Claude Code, and OpenCode adapter files exist |
-| README runtime coverage | PASS | Root README covers Rust `aiplus`, Codex, Claude Code, OpenCode, validation, safety, and current release status |
+| README runtime coverage | PASS | Root README covers AiPlus CLI (`aiplus`), Codex, Claude Code, OpenCode, validation, safety, and current release status |
 | README beginner flow | PASS | Root README and `README.zh-CN.md` put `aiplus install ...`, `刷新`/`refresh`, and `aiplus compact ...` before legacy Node reference |
 | README link/path sanity | PASS | Relative markdown links checked with no broken links |
 | Public-safety scan | PASS | No blocker; expected policy/detector/test matches only |
@@ -36,8 +36,6 @@ Run from the final `aiplus-auto-compact` checkout before publication:
 ```bash
 rtk node --check core/scripts/compactctl.mjs
 rtk npm test
-rtk cargo test
-rtk cargo run -p aiplus-cli -- --help
 rtk node - <<'NODE'
 const fs=require('fs'), path=require('path');
 const want=new Set(['package.json','plugin.json','opencode.json.example','hooks.example.json']);
@@ -60,6 +58,13 @@ for(const [base,files] of Object.entries(required)){
 }
 process.exit(fail?1:0);
 NODE
+```
+
+Run AiPlus CLI alignment checks from the sibling `../aiplus-rust` checkout:
+
+```bash
+rtk cargo test
+rtk cargo run -p aiplus-cli -- --help
 ```
 
 After GitHub publication, verify:

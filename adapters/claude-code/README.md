@@ -25,7 +25,8 @@ The command files are prompt documents. They do not run shell scripts, change gl
 
 ## Loading Locally
 
-Ordinary users should install the project-local adapter through Rust `aiplus`:
+Ordinary users should install the project-local adapter through the AiPlus CLI
+(`aiplus`):
 
 ```bash
 cd <TARGET_PROJECT>

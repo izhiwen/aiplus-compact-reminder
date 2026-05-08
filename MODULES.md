@@ -15,8 +15,9 @@ Responsibilities:
 - Define the compact/resume state contract.
 - Provide templates for `.codex/compact/`.
 - Provide schemas for policy and parsed handoff files.
-- Provide templates and schemas used by Rust `aiplus compact init`, `validate`,
-  `checkpoint`, and `resume`.
+- Provide templates and schemas used by AiPlus CLI commands such as
+  `aiplus compact init`, `aiplus compact validate`,
+  `aiplus compact checkpoint`, and `aiplus compact resume`.
 - Retain `compactctl.mjs` as a legacy standalone helper for compatibility tests
   and migration reference.
 - Document Owner gates and checkpoint/resume flow.
@@ -34,7 +35,8 @@ Path:
 Responsibilities:
 
 - Preserve the existing Codex compact protocol workflow.
-- Document Codex usage through Rust `aiplus install codex`.
+- Document Codex usage through the AiPlus CLI command
+  `aiplus install codex`.
 - Provide Codex-specific plugin and skill assets while using the shared core scripts, schemas, templates, fixtures, and tests.
 
 The Codex adapter cannot trigger Codex UI compaction or call `/compact` for the user.
@@ -86,7 +88,7 @@ Paths:
 Responsibilities:
 
 - Explain quick starts for supported runtimes.
-- Keep ordinary-user docs aligned with Rust `aiplus`.
+- Keep ordinary-user docs aligned with the AiPlus CLI (`aiplus`).
 - Explain migration from `codex-compact-protocol`.
 - Provide synthetic examples only.
 - Keep public wording aligned with local-first behavior and validation limits.

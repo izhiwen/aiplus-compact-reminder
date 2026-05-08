@@ -3,8 +3,8 @@
 This example shows how an OpenCode user can apply AiPlus Auto Compact to a synthetic project named `<EXAMPLE_PROJECT>`.
 
 Use the project-local OpenCode adapter when command, agent, prompt, and
-`opencode.json` examples are useful. Rust `aiplus` is the ordinary-user compact
-command path.
+`opencode.json` examples are useful. AiPlus CLI (`aiplus`) is the ordinary-user
+compact command path.
 
 ## Commands
 

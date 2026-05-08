@@ -2,7 +2,9 @@
 
 [中文 README](README.zh-CN.md)
 
-AiPlus Auto Compact is the compact/checkpoint/resume workflow module used by the Rust `aiplus` CLI. It helps Codex, Claude Code, and OpenCode keep project-local handoff state before and after a context compact.
+AiPlus Auto Compact is the compact/checkpoint/resume workflow module used by
+the AiPlus CLI (`aiplus`). It helps Codex, Claude Code, and OpenCode keep
+project-local handoff state before and after a context compact.
 
 It does not click a compact button, call `/compact`, upload data, change global runtime settings, or make compact safe automatically. It prepares local files, validates common structure, writes checkpoints, and reminds the agent what to read next.
 
@@ -10,7 +12,8 @@ It does not click a compact button, call `/compact`, upload data, change global 
 
 ### 1. Install the module into your project
 
-Use the Rust `aiplus` CLI from the AiPlus CLI distribution or local source build. From the project you want to protect:
+If `aiplus` is already on your `PATH`, run this from the project you want to
+protect:
 
 ```bash
 cd MyProject
@@ -77,7 +80,7 @@ aiplus compact resume
 | Claude Code | `aiplus install claude-code` | Optional reviewed hooks and commands | Use project-local Claude Code adapter files; review hooks before enabling them. |
 | OpenCode | `aiplus install opencode` | Project-local command workflow | Use project `.opencode/` commands, agents, and prompts; keep global config unchanged. |
 
-Compatibility aliases are supported by the Rust CLI:
+Compatibility aliases are supported by the AiPlus CLI:
 
 ```bash
 aiplus install claude
@@ -89,7 +92,8 @@ aiplus install --all-runtimes
 
 ## What This Repository Contains
 
-This repository is the compact workflow module source, not the full `aiplus` CLI distribution.
+This repository is the compact workflow module source, not the full AiPlus CLI
+distribution.
 
 - `core/templates/`: compact handoff templates.
 - `core/schemas/`: JSON schemas for policy and ledger structure.
@@ -141,7 +145,9 @@ Validation is structural and heuristic. A validation pass means the files satisf
 
 ## Advanced: Legacy Node Reference
 
-The current ordinary-user path is Rust `aiplus`. The older standalone Node helper remains in this repository for compatibility and migration review:
+The current ordinary-user path is the AiPlus CLI (`aiplus`). The older
+standalone Node helper remains in this repository for compatibility and
+migration review:
 
 ```bash
 node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs init
@@ -150,7 +156,8 @@ node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs checkpoint
 node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs resume
 ```
 
-Use this only when you are auditing the legacy workflow or testing this module without the Rust `aiplus` CLI.
+Use this only when you are auditing the legacy workflow or testing this module
+without the AiPlus CLI.
 
 ## Validation
 
@@ -162,7 +169,7 @@ npm test
 node --check core/scripts/compactctl.mjs
 ```
 
-Run Rust-first compact checks from a target project where `aiplus` is available:
+Run compact checks from a target project where `aiplus` is available:
 
 ```bash
 cd MyProject
@@ -171,7 +178,7 @@ aiplus compact checkpoint
 aiplus compact resume
 ```
 
-Exit codes used by the legacy helper and mirrored by the Rust compact flow:
+Exit codes used by the legacy helper and mirrored by the AiPlus compact flow:
 
 - `0`: pass or safe.
 - `1`: blocked or invalid.
@@ -190,13 +197,19 @@ These examples use placeholders only and are not copied from private projects.
 
 ## Migration
 
-`codex-compact-protocol` is the legacy Codex-first public record. AiPlus Auto Compact is the current cross-agent compact workflow module, and Rust `aiplus` is the current user-facing CLI path.
+`codex-compact-protocol` is the legacy Codex-first public record. AiPlus Auto
+Compact is the current cross-agent compact workflow module, and the AiPlus CLI
+(`aiplus`) is the current user-facing path.
 
 Existing `.codex/compact/` state remains compatible. For details, read [Migration From Codex Compact Protocol](docs/migration-from-codex-compact-protocol.md).
 
 ## Current Release Status
 
-This repository is public on GitHub as `aiplus-auto-compact`. It is not published to npm, Cargo, Homebrew, any package registry, or any marketplace. The Rust `aiplus` CLI is the intended distribution surface for ordinary users. Future tags, GitHub Releases, package publications, binary uploads, marketplace submissions, or installer publication require separate Owner approval.
+This repository is public on GitHub as `aiplus-auto-compact`. It is not
+published to npm, Cargo, Homebrew, any package registry, or any marketplace. The
+AiPlus CLI (`aiplus`) is the intended distribution surface for ordinary users.
+Future tags, GitHub Releases, package publications, binary uploads, marketplace
+submissions, or installer publication require separate Owner approval.
 
 ## Contributing
 
