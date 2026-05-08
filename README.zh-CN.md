@@ -208,6 +208,14 @@ aiplus secret-broker status
 child command 会在 environment 里收到 secret，仍可能自己 print、log、transmit 或
 store。只对可信且符合当前 action need 的命令使用 `run --`。
 
+AiPlus v0.4.3 扩展了 approved secret alias table，覆盖常见 AI、search、image 和
+developer providers。示例包括 `openai`、`anthropic`、`gemini`、`github`、
+`cloudflare`、`kimi`、`deepseek`、`qwen`、`openrouter`、`xai`、`groq`、
+`mistral`、`perplexity`、`tavily`、`firecrawl` 和 `volcengine_ark`。当前完整映射以
+`aiplus secret-broker list` 为准。真实 Bitwarden smoke check 需要 Bitwarden
+Secrets Manager `bws` CLI 和 read-only machine account token；如果没有 `bws`，agent
+只能做 mock/local status check，不能 fallback 到打印 secret value。
+
 ## 日常命令
 
 ```bash
