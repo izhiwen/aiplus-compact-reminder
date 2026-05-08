@@ -15,7 +15,7 @@ runtime 设置，也不会保证 compact 一定安全。
 
 ### Path A: AiPlus ecosystem install
 
-当 AiPlus release installer 可用后，预期的一条命令 ecosystem 路径是：
+先安装 AiPlus，再把 project-local compact module 安装到你的项目：
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/izhiwen/aiplus/main/install.sh | bash
@@ -23,8 +23,9 @@ cd MyProject
 aiplus install codex
 ```
 
-当前状态：public AiPlus repo 已存在，但 GitHub Release installer 还没有 live。
-在 installer 发布前，如果你的机器上已经有 `aiplus`，请使用 Path B。
+如果项目里已经有旧版 AiPlus install，`aiplus install codex` 会安全升级 AiPlus
+managed files，把被替换的 managed files 备份到 `.aiplus/backups/`，并保留已有
+`.codex/compact/` state。
 
 ### Path B: 已安装 `aiplus` command
 
@@ -57,7 +58,8 @@ aiplus install all
 refresh
 ```
 
-含义：重新读取 `AGENTS.md`，重新读取 `.aiplus/AGENTS.aiplus.md`，如果存在则读取
+含义：优先当作 AiPlus refresh，先报告 Auto Compact 和 compact state，再重新读取
+`AGENTS.md`、`.aiplus/AGENTS.aiplus.md`，如果存在则读取
 `.codex/compact/current-handoff.md`，启用 AiPlus guidance，并继续当前任务。
 
 ### Path C: Advanced / module-only adoption

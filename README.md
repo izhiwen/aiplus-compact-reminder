@@ -19,8 +19,7 @@ runtime settings, or make compact safe automatically.
 
 ### Path A: AiPlus ecosystem install
 
-When the AiPlus release installer is available, the intended one-command
-ecosystem path is:
+Install AiPlus, then install the project-local compact module:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/izhiwen/aiplus/main/install.sh | bash
@@ -28,9 +27,9 @@ cd MyProject
 aiplus install codex
 ```
 
-Current status: the public AiPlus repo exists, but no GitHub Release installer
-is live yet. Until that installer is published, use Path B if `aiplus` is
-already installed.
+If the project already has an older AiPlus install, `aiplus install codex`
+safely upgrades AiPlus managed files, backs up replaced managed files under
+`.aiplus/backups/`, and preserves existing `.codex/compact/` state.
 
 ### Path B: Existing `aiplus` command
 
@@ -61,7 +60,8 @@ Or:
 refresh
 ```
 
-Meaning: reread `AGENTS.md`, reread `.aiplus/AGENTS.aiplus.md`, read
+Meaning: treat this as AiPlus refresh first, report Auto Compact and compact
+state, reread `AGENTS.md`, reread `.aiplus/AGENTS.aiplus.md`, read
 `.codex/compact/current-handoff.md` if present, enable AiPlus guidance, and
 continue the current task.
 
