@@ -4,11 +4,14 @@ This guide is for users moving from `codex-compact-protocol` to AiPlus Auto Comp
 
 ## What Changed
 
-AiPlus Auto Compact keeps the compact/resume state model and CLI workflow, but separates the project into:
+AiPlus Auto Compact keeps the compact/resume state model, but changes the
+ordinary-user path to the Rust `aiplus` CLI:
 
-- A shared runtime-neutral core under `<REPO_ROOT>/aiplus-auto-compact/core/`.
-- Runtime adapters under `<REPO_ROOT>/aiplus-auto-compact/adapters/`.
-- Root public docs and synthetic examples under `<REPO_ROOT>/aiplus-auto-compact/`.
+- Rust `aiplus` is the current user-facing CLI.
+- `aiplus-auto-compact` is the compact/checkpoint/resume workflow module.
+- `core/scripts/compactctl.mjs` is retained as a legacy standalone helper and
+  compatibility reference.
+- Runtime adapters live under `<REPO_ROOT>/aiplus-auto-compact/adapters/`.
 
 The core protocol still uses the compatibility state path:
 
@@ -37,7 +40,8 @@ The tool still cannot trigger Codex UI compact, call `/compact`, or control Clau
 | --- | --- |
 | Protocol templates | `<REPO_ROOT>/aiplus-auto-compact/core/templates/` |
 | Protocol schemas | `<REPO_ROOT>/aiplus-auto-compact/core/schemas/` |
-| Helper CLI | `<REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs` |
+| Current user CLI | `aiplus compact validate`, `aiplus compact checkpoint`, `aiplus compact resume` |
+| Legacy helper CLI | `<REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs` |
 | Target project state | `<TARGET_PROJECT>/.codex/compact/` |
 | Codex-specific docs and assets | `<REPO_ROOT>/aiplus-auto-compact/adapters/codex/` |
 | Claude Code command assets | `<REPO_ROOT>/aiplus-auto-compact/adapters/claude-code/` |
@@ -48,13 +52,13 @@ From the target project:
 
 ```bash
 cd <TARGET_PROJECT>
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs validate
+aiplus compact validate
 ```
 
-If validation passes, create a new checkpoint with the shared core CLI:
+If validation passes, create a new checkpoint:
 
 ```bash
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs checkpoint
+aiplus compact checkpoint
 ```
 
 If validation reports unsupported or missing versions, review the files under `.codex/compact/` before editing. Unknown versions should be treated as review items, not automatic upgrades.
@@ -63,25 +67,25 @@ For a fresh target project:
 
 ```bash
 cd <TARGET_PROJECT>
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs init
+aiplus install codex
 ```
 
 Use `--force` only when `<OWNER>` intends to replace existing compact files with templates.
 
 ## Codex Users
 
-Use the shared core CLI as the default v0.2 workflow:
+Use Rust `aiplus` as the default workflow:
 
 ```bash
 cd <TARGET_PROJECT>
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs validate
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs checkpoint
+aiplus compact validate
+aiplus compact checkpoint
 ```
 
 Keep Codex compact manual. After compact:
 
 ```bash
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs resume
+aiplus compact resume
 ```
 
 ## Claude Code Users
@@ -92,7 +96,9 @@ Load the Claude Code adapter when command documents are useful:
 claude --plugin-dir <REPO_ROOT>/aiplus-auto-compact/adapters/claude-code
 ```
 
-Then use the namespaced commands to guide validation, checkpoint, and resume. The shared core CLI remains the source of structural validation.
+Then use the namespaced commands to guide validation, checkpoint, and resume.
+When shell commands are needed, prefer `aiplus compact validate`,
+`aiplus compact checkpoint`, and `aiplus compact resume`.
 
 ## OpenCode Users
 
@@ -102,7 +108,9 @@ Use the OpenCode adapter when project-local config, commands, agents, and prompt
 cp <REPO_ROOT>/aiplus-auto-compact/adapters/opencode/opencode.json.example <TARGET_PROJECT>/.opencode/opencode.json
 ```
 
-Merge rather than overwrite if the target project already has `.opencode/opencode.json`. The shared core CLI remains the source of structural validation, and OpenCode compact/session controls remain manual.
+Merge rather than overwrite if the target project already has
+`.opencode/opencode.json`. Use `aiplus compact ...` for structural validation,
+and keep OpenCode compact/session controls manual.
 
 ## Review Checklist
 

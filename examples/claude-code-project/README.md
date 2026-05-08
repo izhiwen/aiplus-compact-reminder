@@ -5,10 +5,19 @@ This example shows how a Claude Code user can apply AiPlus Auto Compact to a syn
 ## Load Adapter
 
 ```bash
-claude --plugin-dir <REPO_ROOT>/aiplus-auto-compact/adapters/claude-code
+cd <TARGET_PROJECT>
+aiplus install claude-code
 ```
 
-Then use the adapter command documents in Claude Code:
+Then type this in the already-open Claude Code session:
+
+```text
+刷新
+```
+
+English also works: `refresh`.
+
+The adapter command documents may also be used in Claude Code:
 
 ```text
 /aiplus-auto-compact:compact-validate
@@ -16,21 +25,18 @@ Then use the adapter command documents in Claude Code:
 /aiplus-auto-compact:compact-resume
 ```
 
-## Shared Core Commands
-
-The shared core CLI remains available from the target project:
+## Compact Commands
 
 ```bash
 cd <TARGET_PROJECT>
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs init
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs validate
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs checkpoint
+aiplus compact validate
+aiplus compact checkpoint
 ```
 
 After the user manually completes the Claude Code compact or session reset step:
 
 ```bash
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs resume
+aiplus compact resume
 ```
 
 ## Synthetic Handoff Content

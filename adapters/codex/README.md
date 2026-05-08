@@ -1,12 +1,13 @@
 # Codex Adapter
 
-This adapter preserves the proven Codex compact/resume workflow from `codex-compact-protocol` while using the shared AiPlus Auto Compact core for scripts, schemas, templates, fixtures, and tests.
+This adapter preserves the proven Codex compact/resume workflow from `codex-compact-protocol` while aligning ordinary users with the Rust `aiplus` CLI.
 
 ## What It Does
 
 - Provides a Codex plugin manifest at `.codex-plugin/plugin.json`.
 - Provides a Codex skill at `skills/compact-protocol/SKILL.md`.
-- Points users to the shared core CLI at `../../core/scripts/compactctl.mjs` from this adapter directory, or `core/scripts/compactctl.mjs` from the repository root.
+- Provides project-local guidance that can be installed by `aiplus install codex`.
+- Keeps legacy Node helper references available for migration review.
 
 ## What It Cannot Do
 
@@ -17,9 +18,9 @@ This adapter cannot force Codex UI compact, click UI controls, or call `/compact
 From a target project:
 
 ```bash
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs init
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs validate
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs checkpoint
+aiplus install codex
+aiplus compact validate
+aiplus compact checkpoint
 ```
 
 Only recommend manual compact after `checkpoint` returns `SAFE_TO_COMPACT` and every Owner gate is explicitly `APPROVED`. `UNKNOWN_PENDING` remains `UNKNOWN_NEEDS_REVIEW`; `DENIED` blocks compact recommendation.
@@ -27,7 +28,7 @@ Only recommend manual compact after `checkpoint` returns `SAFE_TO_COMPACT` and e
 After compact:
 
 ```bash
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs resume
+aiplus compact resume
 ```
 
 ## Shared Core
@@ -35,10 +36,13 @@ node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs resume
 The Codex adapter intentionally does not duplicate the core implementation. Shared assets live in:
 
 ```text
-../../core/scripts/compactctl.mjs
 ../../core/schemas/
 ../../core/templates/
 ../../core/docs/
 ```
 
 This keeps Codex behavior aligned with Claude Code and OpenCode adapters.
+
+`../../core/scripts/compactctl.mjs` remains available as a legacy standalone
+helper for audits and compatibility tests, but it is not the ordinary-user
+Rust `aiplus` path.

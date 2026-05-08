@@ -15,9 +15,9 @@ This example shows how a Codex user can apply AiPlus Auto Compact to a synthetic
 
 ```bash
 cd <TARGET_PROJECT>
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs init
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs validate
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs checkpoint
+aiplus install codex
+aiplus compact validate
+aiplus compact checkpoint
 ```
 
 If checkpoint output is acceptable after review, the user manually runs Codex compact through the Codex UI or `/compact`.
@@ -26,7 +26,7 @@ After compact:
 
 ```bash
 cd <TARGET_PROJECT>
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs resume
+aiplus compact resume
 ```
 
 ## Synthetic Handoff Content

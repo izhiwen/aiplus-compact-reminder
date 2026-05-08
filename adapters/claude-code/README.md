@@ -25,13 +25,40 @@ The command files are prompt documents. They do not run shell scripts, change gl
 
 ## Loading Locally
 
-From a project where Claude Code is available, load this adapter explicitly:
+Ordinary users should install the project-local adapter through Rust `aiplus`:
+
+```bash
+cd <TARGET_PROJECT>
+aiplus install claude-code
+```
+
+Then type this in the already-open Claude Code session:
+
+```text
+刷新
+```
+
+English also works:
+
+```text
+refresh
+```
+
+For direct adapter inspection in a local checkout, load this adapter explicitly:
 
 ```bash
 claude --plugin-dir ./aiplus-auto-compact/adapters/claude-code
 ```
 
 You can then invoke the namespaced slash commands in Claude Code.
+
+When shell validation is needed, use:
+
+```bash
+aiplus compact validate
+aiplus compact checkpoint
+aiplus compact resume
+```
 
 ## Optional Hook Concept
 

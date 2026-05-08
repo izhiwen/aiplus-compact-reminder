@@ -1,12 +1,16 @@
 # QA Report
 
-Scope: final local validation of `aiplus-auto-compact` before approved GitHub publication.
+Scope: final local validation of `aiplus-auto-compact` before the approved
+Rust-first README/documentation update is pushed to GitHub `main`.
 
 ## Status
 
 LOCAL PASS.
 
-Required local validation passed. GitHub remote/latest-commit verification was completed after repo creation and push. No npm publish, tag, GitHub Release, marketplace submission, global install, or `$CODEX_HOME` modification was performed.
+Required local validation passed. GitHub remote/latest-commit verification is a
+post-push step recorded in the final result packet for each approved GitHub
+`main` update. No npm publish, Cargo publish, tag, GitHub Release, marketplace
+submission, global install, or `$CODEX_HOME` modification was performed.
 
 ## Commands and Results
 
@@ -16,6 +20,8 @@ Run from `<REPO_ROOT>/aiplus-auto-compact`.
 | --- | --- | --- |
 | Syntax check | `rtk node --check core/scripts/compactctl.mjs` | PASS |
 | Acceptance tests | `rtk npm test` | PASS, 15/15 tests passed |
+| Rust CLI command truth | `rtk cargo test` in `<AIPLUS_SOURCE>/aiplus-rust` | PASS, 6/6 tests passed |
+| Rust CLI help | `rtk cargo run -p aiplus-cli -- --help` in `<AIPLUS_SOURCE>/aiplus-rust` | PASS, shows `install`, `status`, `doctor`, `compact` |
 | JSON parse | Recursive Node parser for `package.json`, `plugin.json`, `opencode.json.example`, `hooks.example.json` | PASS |
 | Required-file check | Node existence check for core, Codex, Claude Code, OpenCode, and examples | PASS |
 | README relative link/path sanity | Node markdown link checker across `.md` files | PASS |
@@ -37,6 +43,9 @@ Run from `<REPO_ROOT>/aiplus-auto-compact`.
 
 The passing tests covered init behavior, idempotence, valid and invalid validation cases, owner-gate handling, version review paths, secret/PII leakage warnings, resume-blocked output, parseable checkpoint JSON, and unknown-command usage output.
 
+`rtk cargo test` in the Rust `aiplus` workspace reported 6/6 tests passed,
+including Rust-native compact coverage that does not invoke Node.
+
 ## Adapter Coverage
 
 Required files were present for:
@@ -54,6 +63,7 @@ No local QA blocker found.
 ## Not Done
 
 - No npm publish.
+- No Cargo publish.
 - No package registry publish.
 - No GitHub Release.
 - No git tag.
@@ -64,4 +74,8 @@ No local QA blocker found.
 
 ## Handoff
 
-Recommended next action: monitor the public GitHub repo and keep any future npm/package registry publish, tags, GitHub Releases, marketplace submissions, global installs, and `$CODEX_HOME` changes behind separate Owner approval.
+Recommended next action: push the reviewed Rust-first documentation update to
+GitHub `main`, verify remote HEAD, and keep any future npm/Cargo/package
+registry publish, tags, GitHub Releases, marketplace submissions, binary
+uploads, global installs, and `$CODEX_HOME` changes behind separate Owner
+approval.

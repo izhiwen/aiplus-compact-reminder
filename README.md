@@ -1,138 +1,115 @@
 # AiPlus Auto Compact
 
-AiPlus Auto Compact is a local compact/resume protocol for long agent sessions. It prepares structured handoff files, validates them, writes checkpoints, and gives the next runtime enough local state to resume after a context compaction.
+[中文 README](README.zh-CN.md)
 
-It does not trigger compaction for you. Codex, Claude Code, and OpenCode still require the user or host runtime to perform the actual compact action. AiPlus Auto Compact helps decide whether the local handoff state is ready to review before that action.
+AiPlus Auto Compact is the compact/checkpoint/resume workflow module used by the Rust `aiplus` CLI. It helps Codex, Claude Code, and OpenCode keep project-local handoff state before and after a context compact.
 
-## Five Minute Start
+It does not click a compact button, call `/compact`, upload data, change global runtime settings, or make compact safe automatically. It prepares local files, validates common structure, writes checkpoints, and reminds the agent what to read next.
 
-Requirements:
+## Beginner Flow
 
-- Node.js 18 or newer.
-- This repository at `<REPO_ROOT>`.
-- A target project at `<TARGET_PROJECT>`.
+### 1. Install the module into your project
 
-Initialize compact state in a target project:
+Use the Rust `aiplus` CLI from the AiPlus CLI distribution or local source build. From the project you want to protect:
 
 ```bash
-cd <TARGET_PROJECT>
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs init
+cd MyProject
+aiplus install codex
 ```
 
-Edit the generated files under:
+For other runtimes:
+
+```bash
+aiplus install claude-code
+aiplus install opencode
+aiplus install all
+```
+
+The install is project-local. It may write `.aiplus/`, `.codex/compact/`, project `.claude/` files, project `.opencode/` files, and the AiPlus managed block in project `AGENTS.md`. It does not modify global Codex, Claude Code, OpenCode, shell, or package-manager configuration.
+
+### 2. Type this in your already-open agent session
+
+After installing in the same project, tell the active agent to refresh:
 
 ```text
-<TARGET_PROJECT>/.codex/compact/
+刷新
 ```
 
-At minimum, fill in the current goal, current phase, blockers, Owner gates, next actions, decisions, agent state, and evidence.
+English also works:
 
-Validate the state:
+```text
+refresh
+```
+
+Meaning: reread `AGENTS.md`, reread `.aiplus/AGENTS.aiplus.md`, read `.codex/compact/current-handoff.md` if present, enable AiPlus guidance, and continue the current task.
+
+### 3. Use compact commands during long work
 
 ```bash
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs validate
+aiplus status
+aiplus doctor
+aiplus compact validate
+aiplus compact checkpoint
+aiplus compact resume
+aiplus uninstall --dry-run
 ```
 
-Create a checkpoint before compact:
+Before compact, run:
 
 ```bash
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs checkpoint
+aiplus compact validate
+aiplus compact checkpoint
 ```
 
-Resume after compact:
+Only recommend manual compact after `checkpoint` returns `SAFE_TO_COMPACT` and every Owner gate is explicitly `APPROVED`. `UNKNOWN_PENDING` means `UNKNOWN_NEEDS_REVIEW`; `DENIED` blocks compact recommendation.
+
+After the user or host runtime completes compact, run:
 
 ```bash
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs resume
+aiplus compact resume
 ```
 
-## Runtime Quick Starts
+## Runtime Choices
 
-### Codex
-
-Use the shared core CLI from the project you want to protect:
-
-```bash
-cd <TARGET_PROJECT>
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs init
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs validate
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs checkpoint
-```
-
-Review the checkpoint result. If the state is acceptable, manually run Codex compact using the Codex UI or `/compact`. After compact, run:
-
-```bash
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs resume
-```
-
-### Claude Code
-
-Load the Claude Code adapter when you want namespaced prompt commands:
-
-```bash
-claude --plugin-dir <REPO_ROOT>/aiplus-auto-compact/adapters/claude-code
-```
-
-Available adapter command documents:
-
-- `/aiplus-auto-compact:compact-validate`
-- `/aiplus-auto-compact:compact-checkpoint`
-- `/aiplus-auto-compact:compact-resume`
-
-The command documents guide Claude Code through the same local protocol. They do not run shell commands automatically unless the agent and user explicitly choose that step.
-
-### OpenCode
-
-Use the project-local OpenCode adapter when you want example commands, agents, prompts, and `opencode.json` configuration:
-
-```bash
-cd <TARGET_PROJECT>
-mkdir -p .opencode/agents .opencode/commands .opencode/prompts
-cp <REPO_ROOT>/aiplus-auto-compact/adapters/opencode/opencode.json.example .opencode/opencode.json
-cp <REPO_ROOT>/aiplus-auto-compact/adapters/opencode/agents/*.md .opencode/agents/
-cp <REPO_ROOT>/aiplus-auto-compact/adapters/opencode/commands/*.md .opencode/commands/
-cp <REPO_ROOT>/aiplus-auto-compact/adapters/opencode/prompts/*.md .opencode/prompts/
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs init
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs validate
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs checkpoint
-```
-
-Then use OpenCode's own compact or session-management controls manually. After compaction, run `resume` and have the next agent read the local state files in the order listed in `current-handoff.md`.
-
-## Runtime Comparison
-
-| Runtime | Adapter | Auto compact support | Recommended v0.2 usage |
+| Runtime | Install command | Auto compact support | Recommended use |
 | --- | --- | --- | --- |
-| Codex | Shared core CLI plus existing Codex adapter assets | No. User manually triggers Codex compact after review. | Use `compactctl.mjs` for `init`, `validate`, `checkpoint`, and `resume`; keep compact action manual. |
-| Claude Code | Claude Code plugin-shaped adapter with command documents and optional hook example | No. Commands and hooks can remind or guide, but do not perform full compaction control. | Load the adapter locally, use namespaced commands for review, and run shared core validation before compacting. |
-| OpenCode | Project-local config, commands, agents, and prompts | No. Use OpenCode's own controls manually. | Use project-local adapter files plus the shared core CLI; do not modify global config by default. |
+| Codex | `aiplus install codex` | Reminder/checkpoint only | Run `aiplus compact checkpoint`, review output, then manually use Codex `/compact` or UI compact. |
+| Claude Code | `aiplus install claude-code` | Optional reviewed hooks and commands | Use project-local Claude Code adapter files; review hooks before enabling them. |
+| OpenCode | `aiplus install opencode` | Project-local command workflow | Use project `.opencode/` commands, agents, and prompts; keep global config unchanged. |
 
-## Shared Core And Adapters
+Compatibility aliases are supported by the Rust CLI:
 
-The shared core is the runtime-neutral part:
+```bash
+aiplus install claude
+aiplus install cc
+aiplus install oc
+aiplus install --runtime codex
+aiplus install --all-runtimes
+```
 
-- Templates for `.codex/compact/` state.
-- JSON schemas for policy and parsed handoff data.
-- `compactctl.mjs` commands for `init`, `validate`, `checkpoint`, and `resume`.
-- Core docs for protocol, Owner gates, and checkpoint/resume flow.
+## What This Repository Contains
 
-Adapters are runtime-facing wrappers or prompts:
+This repository is the compact workflow module source, not the full `aiplus` CLI distribution.
 
-- Codex adapter assets preserve the existing Codex compact protocol workflow.
-- Claude Code adapter assets provide plugin-shaped command documents and an optional hook example.
-- OpenCode adapter assets provide project-local config, commands, agents, and prompts.
-
-Adapters should not fork the protocol unless they also document compatibility and migration behavior.
+- `core/templates/`: compact handoff templates.
+- `core/schemas/`: JSON schemas for policy and ledger structure.
+- `core/docs/`: protocol, Owner gate, and checkpoint/resume reference.
+- `adapters/codex/`: Codex plugin and skill assets.
+- `adapters/claude-code/`: Claude Code plugin-shaped commands, skill, and optional hook example.
+- `adapters/opencode/`: OpenCode project-local config, commands, agents, and prompts.
+- `examples/`: synthetic examples for all three runtimes.
+- `core/scripts/compactctl.mjs`: legacy standalone Node helper retained for compatibility tests and migration reference.
 
 ## What It Can Automate
 
 AiPlus Auto Compact can:
 
 - Create local compact state files in a target project.
-- Preserve existing compact files unless `--force` is used.
+- Preserve existing compact files unless an explicit force flow is used.
 - Validate required files, sections, enum values, policy JSON, version fields, Owner gates, next actions, and obvious sensitive patterns.
 - Write local checkpoint JSON under `.codex/compact/checkpoints/`.
 - Print resume-oriented state after compaction.
-- Normalize checkpoint working-directory output as `<REPO_ROOT>`.
+- Keep runtime setup project-local by default.
 
 ## What It Cannot Automate
 
@@ -142,8 +119,8 @@ AiPlus Auto Compact cannot:
 - Verify that compaction is operationally appropriate for every project.
 - Detect every secret, private path, or personal-data pattern.
 - Replace human review of Owner gates.
-- Publish packages, push commits, create tags, upload artifacts, or configure cloud services.
-- Make Codex, Claude Code, or OpenCode share the same internal context implementation.
+- Publish packages, create tags, upload artifacts, or configure cloud services.
+- Make Codex, Claude Code, and OpenCode share one internal context implementation.
 
 ## Safety And Privacy Boundaries
 
@@ -160,29 +137,45 @@ Use placeholders in public docs and examples:
 - `<REDACTED_TOKEN>`
 - `<REDACTED_PII>`
 
-Validation is structural and heuristic. A validation pass means the files satisfy the local contract; it does not prove the project is ready to compact.
+Validation is structural and heuristic. A validation pass means the files satisfy the local contract; it does not prove the project is ready to compact, safe to publish, compliant, or private.
+
+## Advanced: Legacy Node Reference
+
+The current ordinary-user path is Rust `aiplus`. The older standalone Node helper remains in this repository for compatibility and migration review:
+
+```bash
+node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs init
+node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs validate
+node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs checkpoint
+node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs resume
+```
+
+Use this only when you are auditing the legacy workflow or testing this module without the Rust `aiplus` CLI.
 
 ## Validation
 
-Run the package acceptance test:
+Run package acceptance tests from this repository:
 
 ```bash
 cd <REPO_ROOT>/aiplus-auto-compact
 npm test
+node --check core/scripts/compactctl.mjs
 ```
 
-Run protocol validation in a target project:
+Run Rust-first compact checks from a target project where `aiplus` is available:
 
 ```bash
-cd <TARGET_PROJECT>
-node <REPO_ROOT>/aiplus-auto-compact/core/scripts/compactctl.mjs validate
+cd MyProject
+aiplus compact validate
+aiplus compact checkpoint
+aiplus compact resume
 ```
 
-Exit codes:
+Exit codes used by the legacy helper and mirrored by the Rust compact flow:
 
-- `0`: structural validation passed.
-- `1`: validation failed or blocking state was found.
-- `2`: state requires review before it can be trusted.
+- `0`: pass or safe.
+- `1`: blocked or invalid.
+- `2`: unknown or inconclusive.
 - `3`: internal error.
 
 ## Examples
@@ -197,11 +190,13 @@ These examples use placeholders only and are not copied from private projects.
 
 ## Migration
 
-If you used `codex-compact-protocol`, read [Migration From Codex Compact Protocol](docs/migration-from-codex-compact-protocol.md).
+`codex-compact-protocol` is the legacy Codex-first public record. AiPlus Auto Compact is the current cross-agent compact workflow module, and Rust `aiplus` is the current user-facing CLI path.
+
+Existing `.codex/compact/` state remains compatible. For details, read [Migration From Codex Compact Protocol](docs/migration-from-codex-compact-protocol.md).
 
 ## Current Release Status
 
-This workspace package is prepared for GitHub publication review and is not published to any package registry. `package.json` currently marks it private and versioned as `0.1.0`. Any release, tag, package publish, or adapter distribution requires separate Owner approval.
+This repository is public on GitHub as `aiplus-auto-compact`. It is not published to npm, Cargo, Homebrew, any package registry, or any marketplace. The Rust `aiplus` CLI is the intended distribution surface for ordinary users. Future tags, GitHub Releases, package publications, binary uploads, marketplace submissions, or installer publication require separate Owner approval.
 
 ## Contributing
 
@@ -212,6 +207,7 @@ Before proposing a release change:
 ```bash
 cd <REPO_ROOT>/aiplus-auto-compact
 npm test
+node --check core/scripts/compactctl.mjs
 ```
 
-Document any behavior changes in `CHANGELOG.md`, update `MODULES.md` when ownership or file layout changes, and update `RELEASE_CHECKLIST.md` before publication review.
+Document behavior changes in `CHANGELOG.md`, update `MODULES.md` when ownership or file layout changes, and update `RELEASE_CHECKLIST.md` before publication review.

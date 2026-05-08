@@ -1,12 +1,15 @@
 # Release Gate
 
-Scope: local QA/release readiness review for `aiplus-auto-compact`.
+Scope: local QA/release readiness review for the Rust-first
+`aiplus-auto-compact` documentation update.
 
 ## Gate Status
 
 PASS.
 
-Local validation passed before GitHub publication. GitHub publication was then completed for `https://github.com/izhiwen/aiplus-auto-compact`, with `main` tracking `origin/main`.
+Local validation passed before the approved GitHub `main` update. GitHub
+remote/latest-commit verification must be repeated after this update is pushed
+to `https://github.com/izhiwen/aiplus-auto-compact`.
 
 ## Required Checks
 
@@ -14,15 +17,17 @@ Local validation passed before GitHub publication. GitHub publication was then c
 | --- | --- | --- |
 | `core/scripts/compactctl.mjs` syntax | PASS | `rtk node --check core/scripts/compactctl.mjs`, exit 0 |
 | Test suite | PASS | `rtk npm test`, 15/15 acceptance tests passed |
+| Rust `aiplus` alignment | PASS | `rtk cargo test` in `<AIPLUS_SOURCE>/aiplus-rust`, 6/6 tests passed; `cargo run -p aiplus-cli -- --help` shows `compact` |
 | Manifest/config JSON parse | PASS | Parsed package metadata, Codex plugin manifest, Claude plugin manifest, Claude hook example, and OpenCode config example |
 | Adapter required files | PASS | Required Codex, Claude Code, and OpenCode adapter files exist |
-| README runtime coverage | PASS | Root README covers Codex, Claude Code, OpenCode, shared core, adapters, validation, safety, and current release status |
+| README runtime coverage | PASS | Root README covers Rust `aiplus`, Codex, Claude Code, OpenCode, validation, safety, and current release status |
+| README beginner flow | PASS | Root README and `README.zh-CN.md` put `aiplus install ...`, `刷新`/`refresh`, and `aiplus compact ...` before legacy Node reference |
 | README link/path sanity | PASS | Relative markdown links checked with no broken links |
 | Public-safety scan | PASS | No blocker; expected policy/detector/test matches only |
 | Private-data scan | PASS | No real private data found; expected policy/detector matches only |
 | Old Codex-only branding in root/core | PASS WITH CAVEAT | `.codex/compact` compatibility paths remain intentionally documented in core; no release blocker |
 | No npm publish/tag/release | PASS | No package publish, tag, GitHub Release, marketplace submission, or global install performed |
-| GitHub remote URL/latest commit after push | PASS | `origin` points to `https://github.com/izhiwen/aiplus-auto-compact.git`; latest commit is recorded by `git log -1 --oneline` |
+| GitHub remote URL/latest commit after push | FINAL RESULT EVIDENCE | Verify after each reviewed documentation commit is pushed to `origin/main` |
 
 ## Final Rerun Commands
 
@@ -31,6 +36,8 @@ Run from the final `aiplus-auto-compact` checkout before publication:
 ```bash
 rtk node --check core/scripts/compactctl.mjs
 rtk npm test
+rtk cargo test
+rtk cargo run -p aiplus-cli -- --help
 rtk node - <<'NODE'
 const fs=require('fs'), path=require('path');
 const want=new Set(['package.json','plugin.json','opencode.json.example','hooks.example.json']);
@@ -67,9 +74,11 @@ rtk git log -1 --oneline
 Not performed:
 
 - npm publish
+- Cargo publish
 - package registry publish
 - GitHub Release creation
 - git tag release
+- binary upload
 - marketplace submission
 - global install
 - `$CODEX_HOME` modification
@@ -77,4 +86,8 @@ Not performed:
 
 ## Handoff Notes
 
-Owner gate needed: no for GitHub repo creation/push under the current approved goal. Separate Owner approval is still required for npm/package registry publish, tags, GitHub Releases, marketplace submission, global installs, and deletion or transfer of the existing Codex-first repo.
+Owner gate needed: no for pushing reviewed `main` changes to
+`izhiwen/aiplus-auto-compact` under the current approved goal. Separate Owner
+approval is still required for npm/Cargo/package registry publish, tags, GitHub
+Releases, binary uploads, marketplace submission, global installs, and deletion
+or transfer of the existing Codex-first repo.

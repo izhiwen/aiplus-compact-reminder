@@ -4,6 +4,12 @@ All notable public documentation changes for AiPlus Auto Compact are recorded he
 
 ## Unreleased
 
+- Reworked `README.md` for Rust `aiplus` first ordinary-user guidance.
+- Added `README.zh-CN.md` with matching beginner flow.
+- Repositioned `compactctl.mjs` as a legacy standalone helper rather than the
+  ordinary-user path.
+- Updated adapter and synthetic example docs to use `aiplus install ...` and
+  `aiplus compact ...` commands.
 - Added root public README with Codex, Claude Code, and OpenCode quick starts.
 - Added shared core versus adapter explanation.
 - Added runtime comparison table for recommended v0.2 usage.

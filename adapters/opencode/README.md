@@ -14,9 +14,29 @@ This directory contains project-local OpenCode assets for the AiPlus compact che
 
 ## Project-Local Setup
 
-Use these files from a project's `.opencode/` directory. This adapter does not modify global OpenCode configuration by default.
+Ordinary users should install the project-local adapter through Rust `aiplus`:
 
-Example from a project root:
+```bash
+cd <TARGET_PROJECT>
+aiplus install opencode
+```
+
+Then type this in the already-open OpenCode session:
+
+```text
+刷新
+```
+
+English also works:
+
+```text
+refresh
+```
+
+Use the files in this adapter for direct inspection or manual project-local
+setup. This adapter does not modify global OpenCode configuration by default.
+
+Manual example from a project root:
 
 ```bash
 mkdir -p .opencode/agents .opencode/commands .opencode/prompts
@@ -54,13 +74,16 @@ They are designed for a Plan/Build style workflow:
 
 ## Core CLI Reference
 
-When a project uses the AiPlus core CLI, reference it from the repository root as:
+When shell validation is needed, use Rust `aiplus`:
 
 ```bash
-../../core/scripts/compactctl.mjs
+aiplus compact validate
+aiplus compact checkpoint
+aiplus compact resume
 ```
 
-This adapter does not install or invoke the core CLI by itself.
+`../../core/scripts/compactctl.mjs` remains a legacy standalone helper for
+audits and compatibility tests, but it is not the ordinary-user path.
 
 ## Limits
 

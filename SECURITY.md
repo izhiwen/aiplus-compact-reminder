@@ -4,7 +4,10 @@ AiPlus Auto Compact stores compact/resume state in local project files. Treat th
 
 ## Supported Versions
 
-The current workspace package is private and versioned `0.1.0` in `package.json`. It is prepared for GitHub publication review, but it is not published to any package registry. Security fixes should target the current local package unless a release branch is created by `<OWNER>`.
+This repository is public on GitHub and versioned `0.1.0` in `package.json`. It
+is not published to npm, Cargo, Homebrew, any package registry, or any
+marketplace. Security fixes should target the current public repository unless a
+release branch is created by `<OWNER>`.
 
 ## Reporting
 
@@ -32,7 +35,11 @@ Do not store:
 
 ## Validation Limits
 
-`compactctl.mjs validate` performs structural and heuristic checks. It can catch missing required files, invalid enum values, invalid policy JSON, unsupported versions, denied or pending Owner gates, and some obvious sensitive patterns.
+`aiplus compact validate` performs structural and heuristic checks. The legacy
+`compactctl.mjs validate` helper is retained for compatibility tests and
+migration review. These checks can catch missing required files, invalid enum
+values, invalid policy JSON, unsupported versions, denied or pending Owner
+gates, and some obvious sensitive patterns.
 
 Validation is not a full secret scanner, privacy review, legal review, or project approval process. Review compact state manually before sharing it, committing it, or using it as the basis for a compact recommendation.
 

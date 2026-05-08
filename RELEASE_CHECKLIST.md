@@ -4,14 +4,17 @@ Use this checklist before `<OWNER>` approves any public release, tag, package pu
 
 ## Status
 
-- Current workspace package: private.
+- Current repository: public GitHub module source.
 - Current `package.json` version: `0.1.0`.
-- Documentation target: v0.2 public docs.
-- Owner gate required for publication: yes.
+- Documentation target: Rust `aiplus` first compact module docs.
+- Owner gate required for tags, GitHub Releases, package publication, binary
+  uploads, marketplace submission, or installer publication: yes.
 
 ## Pre-Release Checks
 
 - Confirm `README.md` uses only placeholders for paths, owners, and examples.
+- Confirm `README.md` and `README.zh-CN.md` put Rust `aiplus` before legacy
+  `compactctl.mjs`.
 - Confirm `SECURITY.md` describes local storage, reporting, redaction, and validation limits.
 - Confirm `CHANGELOG.md` includes the release entry.
 - Confirm `MODULES.md` reflects the current shared core and adapters.
@@ -46,9 +49,13 @@ Do not publish from the dry run. Use it only to inspect package contents.
 
 ## Documentation Review
 
-- The README can be followed in about five minutes by a user with Node.js 18 or newer.
-- The runtime comparison table has exactly these columns: Runtime, Adapter, Auto compact support, Recommended v0.2 usage.
+- The README can be followed in about five minutes by a user with Rust `aiplus`
+  available.
+- The runtime choice table has exactly these columns: Runtime, Install command,
+  Auto compact support, Recommended use.
 - Migration notes explain what changed from `codex-compact-protocol`.
+- Legacy Node helper references are clearly marked advanced, compatibility, or
+  migration-only.
 - Security docs explain what validation can and cannot prove.
 - Release notes state whether the package is private, pre-release, or approved for publication.
 
