@@ -11,7 +11,17 @@ This skill cannot trigger the Codex UI compact button. It only prepares, validat
 
 ## Recommend Compact
 
-Recommend a manual compact only after `compactctl checkpoint` returns `SAFE_TO_COMPACT`, the handoff files have a current goal, current phase, next 3 actions, no unresolved critical blockers, and all Owner gates are explicitly `APPROVED`. `UNKNOWN_PENDING` must remain `UNKNOWN_NEEDS_REVIEW` and must not be used as a compact recommendation condition.
+Recommend a manual compact only after `aiplus compact checkpoint` returns
+`SAFE_TO_COMPACT`, the handoff files have a current goal, current phase, next 3
+actions, no unresolved critical blockers, and all Owner gates are explicitly
+`APPROVED`. `UNKNOWN_PENDING` must remain `UNKNOWN_NEEDS_REVIEW` and must not be
+used as a compact recommendation condition.
+
+When checkpoint state is ready, use clear manual-compact wording:
+
+```text
+建议现在 compact。AiPlus checkpoint 已准备好。compact 后如果宿主继续把控制权交给我，我会自动恢复；如果工具等待你发消息，随便说“继续”“刷新”“continue”“resume”或类似意思即可。
+```
 
 ## Do Not Recommend Compact
 
@@ -36,7 +46,7 @@ All compact state lives under `.codex/compact/`:
 4. Read `decision-log.md` for active decisions.
 5. Read `agent-state-ledger.md` for delegated work state.
 6. Read `evidence-ledger.md` for verification evidence.
-7. Run `node scripts/compactctl.mjs resume` from the plugin or copied script path.
+7. Run `aiplus compact resume` when the host returns control after compact.
 8. Continue only from the listed Next Safe Action.
 
 ## Owner Gates
@@ -51,22 +61,35 @@ Never write API keys, tokens, JWTs, cookies, Authorization headers, private keys
 
 Use at most 5 review/discussion rounds. The CEO records the goal, current phase, decisions, Owner gates, delegated agent status, evidence, blockers, and next 3 actions before each compact checkpoint. Agents should report only status, evidence, blockers, and changed files.
 
-## compactctl
+## AiPlus CLI
 
 Run from a target repository:
 
 ```bash
-node <PLUGIN_ROOT>/scripts/compactctl.mjs init
-node <PLUGIN_ROOT>/scripts/compactctl.mjs validate
-node <PLUGIN_ROOT>/scripts/compactctl.mjs checkpoint
-node <PLUGIN_ROOT>/scripts/compactctl.mjs resume
+aiplus compact validate
+aiplus compact checkpoint
+aiplus compact resume
 ```
 
-`init` creates `.codex/compact/` and copies templates without overwriting unless `--force` is used. `validate` checks structure only; passing validation does not mean safe to compact. `checkpoint` writes non-sensitive metadata and prints `SAFE_TO_COMPACT`, `BLOCKED_DO_NOT_COMPACT`, or `UNKNOWN_NEEDS_REVIEW`. `resume` prints the resumable state or `RESUME_BLOCKED`.
+`validate` checks structure only; passing validation does not mean safe to
+compact. `checkpoint` writes non-sensitive metadata and prints
+`SAFE_TO_COMPACT`, `BLOCKED_DO_NOT_COMPACT`, or `UNKNOWN_NEEDS_REVIEW`.
+`resume` prints the resumable state or `RESUME_BLOCKED`.
 
 ## After Compact
 
-After compact, first run `resume`, then inspect the compact files in recovery order. Continue only from the next safe action, and re-run `validate` before changing gates or decisions.
+After compact, if Codex returns control automatically, first run
+`aiplus compact resume`, then inspect the compact files in recovery order.
+Continue only from the next safe action, and re-run `validate` before changing
+gates or decisions. If Codex waits for the user, natural continuation messages
+such as `继续`, `刷新`, `refresh`, `continue`, `resume`, `go on`, or `接着`
+should restart the resume flow. This is best-effort; the skill cannot wake
+Codex by itself.
+
+## Legacy Node Helper
+
+`compactctl.mjs` remains available for compatibility audits, but it is not the
+ordinary AiPlus path.
 
 ## Failure Behavior
 

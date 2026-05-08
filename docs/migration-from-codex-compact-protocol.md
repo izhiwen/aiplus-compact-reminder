@@ -4,11 +4,14 @@ This guide is for users moving from `codex-compact-protocol` to AiPlus Auto Comp
 
 ## What Changed
 
-AiPlus Auto Compact keeps the compact/resume state model, but changes the
-ordinary-user path to the AiPlus CLI (`aiplus`):
+AiPlus Auto Compact keeps the compact/resume state model, but supports two
+current audiences:
 
-- AiPlus CLI (`aiplus`) is the current user-facing CLI.
-- `aiplus-auto-compact` is the compact/checkpoint/resume workflow module.
+- AiPlus users who install the bundled Auto Compact module through `aiplus`.
+- Module-only users who visit this repository directly to inspect, copy, or
+  adapt the compact workflow.
+- `aiplus-auto-compact` is the independent compact/checkpoint/resume workflow
+  module.
 - `core/scripts/compactctl.mjs` is retained as a legacy standalone helper and
   compatibility reference.
 - Runtime adapters live under `<REPO_ROOT>/aiplus-auto-compact/adapters/`.
@@ -87,6 +90,11 @@ Keep Codex compact manual. After compact:
 ```bash
 aiplus compact resume
 ```
+
+If the host returns control automatically, the agent should run resume and
+continue. If the host waits for the user, natural continuation messages such as
+`继续`, `刷新`, `refresh`, `continue`, `resume`, `go on`, or `接着` should restart
+the resume flow.
 
 ## Claude Code Users
 

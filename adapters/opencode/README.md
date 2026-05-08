@@ -83,12 +83,20 @@ aiplus compact checkpoint
 aiplus compact resume
 ```
 
+Before compact, run validate and checkpoint. If checkpoint state is ready, the
+agent can recommend manual compact and explain best-effort resume: when OpenCode
+returns control automatically, run `aiplus compact resume`; if OpenCode waits
+for the user, messages such as `继续`, `刷新`, `refresh`, `continue`, `resume`,
+`go on`, or `接着` should restart the resume flow.
+
 `../../core/scripts/compactctl.mjs` remains a legacy standalone helper for
 audits and compatibility tests, but it is not the ordinary-user path.
 
 ## Limits
 
-This adapter is guidance, not a safety system. It does not prove correct recovery, prevent scope mistakes, or make compaction safe without agent or human review.
+This adapter is guidance, not a safety system. It does not prove correct
+recovery, prevent scope mistakes, wake OpenCode if it is waiting for a user
+message, or make compaction safe without agent or human review.
 
 ## Validation
 

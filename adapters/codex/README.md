@@ -13,7 +13,10 @@ This adapter preserves the proven Codex compact/resume workflow from
 
 ## What It Cannot Do
 
-This adapter cannot force Codex UI compact, click UI controls, or call `/compact` for the user. It prepares checkpoint/resume state only. The user still manually runs `/compact` or uses the Codex UI compact control after review.
+This adapter cannot force Codex UI compact, click UI controls, or call
+`/compact` for the user. It prepares checkpoint/resume state only. The user
+still manually runs `/compact` or uses the Codex UI compact control after
+review.
 
 ## Local Use
 
@@ -27,11 +30,21 @@ aiplus compact checkpoint
 
 Only recommend manual compact after `checkpoint` returns `SAFE_TO_COMPACT` and every Owner gate is explicitly `APPROVED`. `UNKNOWN_PENDING` remains `UNKNOWN_NEEDS_REVIEW`; `DENIED` blocks compact recommendation.
 
-After compact:
+When checkpoint state is ready, tell the user:
+
+```text
+建议现在 compact。AiPlus checkpoint 已准备好。compact 后如果宿主继续把控制权交给我，我会自动恢复；如果工具等待你发消息，随便说“继续”“刷新”“continue”“resume”或类似意思即可。
+```
+
+After compact, if Codex returns control automatically:
 
 ```bash
 aiplus compact resume
 ```
+
+If Codex waits for the user, natural continuation messages such as `继续`,
+`刷新`, `refresh`, `continue`, `resume`, `go on`, or `接着` should restart the
+resume flow. This is best-effort; the adapter cannot wake Codex by itself.
 
 ## Shared Core
 

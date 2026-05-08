@@ -1,7 +1,8 @@
 # QA Report
 
 Scope: final local validation of `aiplus-auto-compact` before the approved
-AiPlus CLI (`aiplus`) README/documentation update is pushed to GitHub `main`.
+AiPlus subproduct/module, installer-path, and auto-resume documentation update
+is pushed to GitHub `main`.
 
 ## Status
 
@@ -26,6 +27,8 @@ Run from this repository root unless a row explicitly names the sibling
 | JSON parse | Recursive Node parser for `package.json`, `plugin.json`, `opencode.json.example`, `hooks.example.json` | PASS |
 | Required-file check | Node existence check for core, Codex, Claude Code, OpenCode, and examples | PASS |
 | README relative link/path sanity | Node markdown link checker across `.md` files | PASS |
+| README beginner UX scan | Node checker for installer path, existing `aiplus` path, module-only path, and refresh/resume wording | PASS |
+| Auto-resume wording scan | targeted `rtk rg` scan for best-effort resume wording and wake/overclaim boundaries | PASS |
 | Public-safety scan | targeted `rtk rg` scans for unsafe content and overclaims | PASS with reviewed expected matches in policy/detector text only |
 | High-risk token scan | targeted `rtk rg` scan for key/token/JWT/private-key shapes | PASS |
 | Private-data scan | targeted `rtk rg` scan for private paths, auth headers, account/customer identifiers, and PII-like patterns | PASS with reviewed expected matches in policy/detector text only |
@@ -75,8 +78,8 @@ No local QA blocker found.
 
 ## Handoff
 
-Recommended next action: push the reviewed AiPlus CLI documentation update to
-GitHub `main`, verify remote HEAD, and keep any future npm/Cargo/package
+Recommended next action: push the reviewed AiPlus Auto Compact documentation
+update to GitHub `main`, verify remote HEAD, and keep any future npm/Cargo/package
 registry publish, tags, GitHub Releases, marketplace submissions, binary
 uploads, global installs, and `$CODEX_HOME` changes behind separate Owner
 approval.

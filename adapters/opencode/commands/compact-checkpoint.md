@@ -19,7 +19,8 @@ This command is a prompt document. It does not modify global OpenCode configurat
 3. Record only facts that are useful after compaction.
 4. If the user gave a checkpoint destination, write there only when it is inside the allowed project scope.
 5. If no destination is available or writing is not allowed, return the checkpoint packet in chat.
-6. When a project has the AiPlus core CLI available, reference it from the repository root as `../../core/scripts/compactctl.mjs` where appropriate.
+6. When a project has the AiPlus CLI available, run or recommend
+   `aiplus compact validate` and `aiplus compact checkpoint`.
 
 ## Packet Format
 
@@ -41,4 +42,4 @@ Return:
 
 - Do not edit outside the active task's allowed scope.
 - Do not imply global OpenCode config changes are required.
-- Do not claim automatic safety, complete recovery, or default-on protection.
+- Do not claim automatic safety, guaranteed recovery, or default-on protection.

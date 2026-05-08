@@ -4,7 +4,10 @@ Use this prompt as shared guidance for OpenCode compact checkpoint and resume wo
 
 ## Purpose
 
-The protocol preserves enough task state to continue after context compaction. It is a documentation and prompt workflow; it does not provide safety assurances, automatic recovery, or default-on protection.
+The protocol preserves enough task state to continue after context compaction.
+It supports best-effort automatic resume when the host returns control to the
+agent, but it does not provide safety assurances, guaranteed recovery, or
+default-on protection.
 
 ## Required State
 
@@ -35,7 +38,8 @@ Track:
 - Do not modify `~/.config/opencode/` by default.
 - Treat Plan style work as analysis, checkpoint preparation, and validation.
 - Treat Build style work as implementation only after scope and conflict checks pass.
-- Where a project includes the AiPlus core CLI, reference it from the repository root as `../../core/scripts/compactctl.mjs` when appropriate.
+- Where a project includes the AiPlus CLI, use `aiplus compact validate`,
+  `aiplus compact checkpoint`, and `aiplus compact resume` when appropriate.
 
 ## Packet Shape
 

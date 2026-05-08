@@ -61,6 +61,13 @@ aiplus compact checkpoint
 aiplus compact resume
 ```
 
+Before compact, the agent should run `aiplus compact validate` and
+`aiplus compact checkpoint`. If checkpoint state is ready, it can recommend
+manual compact and explain that resume is best-effort: when Claude Code returns
+control automatically, the agent should run `aiplus compact resume`; if Claude
+Code waits for the user, messages such as `继续`, `刷新`, `refresh`, `continue`,
+`resume`, `go on`, or `接着` should restart the resume flow.
+
 ## Optional Hook Concept
 
 `hooks/hooks.example.json` shows optional `PreCompact` and `SessionStart` reminder hooks:

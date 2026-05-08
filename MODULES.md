@@ -1,6 +1,8 @@
 # Modules
 
-AiPlus Auto Compact is split into a shared core and runtime adapters.
+AiPlus Auto Compact is an independent AiPlus subproduct. It can be bundled and
+installed by the AiPlus CLI (`aiplus`), or reviewed directly by users who only
+want the compact/checkpoint/resume workflow.
 
 ## Shared Core
 

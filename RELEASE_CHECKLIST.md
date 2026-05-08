@@ -15,6 +15,12 @@ Use this checklist before `<OWNER>` approves any public release, tag, package pu
 - Confirm `README.md` uses only placeholders for paths, owners, and examples.
 - Confirm `README.md` and `README.zh-CN.md` put the AiPlus CLI (`aiplus`)
   before legacy `compactctl.mjs`.
+- Confirm `README.md` and `README.zh-CN.md` explain both identities:
+  independent AiPlus subproduct and bundled AiPlus CLI module.
+- Confirm installer docs mark the `install.sh` flow as future/planned until a
+  reviewed AiPlus release installer is live.
+- Confirm compact docs describe best-effort automatic resume without claiming
+  Auto Compact can wake a host runtime.
 - Confirm `SECURITY.md` describes local storage, reporting, redaction, and validation limits.
 - Confirm `CHANGELOG.md` includes the release entry.
 - Confirm `MODULES.md` reflects the current shared core and adapters.
@@ -51,6 +57,8 @@ Do not publish from the dry run. Use it only to inspect package contents.
 
 - The README can be followed in about five minutes by a user with `aiplus`
   available on `PATH`.
+- The README supports users who want only AiPlus Auto Compact without implying
+  this repository is the full AiPlus CLI repo.
 - The runtime choice table has exactly these columns: Runtime, Install command,
   Auto compact support, Recommended use.
 - Migration notes explain what changed from `codex-compact-protocol`.

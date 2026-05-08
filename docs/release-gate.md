@@ -1,7 +1,7 @@
 # Release Gate
 
-Scope: local QA/release readiness review for the AiPlus CLI (`aiplus`)
-documentation update in `aiplus-auto-compact`.
+Scope: local QA/release readiness review for the AiPlus Auto Compact
+subproduct/module, installer-path, and auto-resume documentation update.
 
 ## Gate Status
 
@@ -21,7 +21,9 @@ to `https://github.com/izhiwen/aiplus-auto-compact`.
 | Manifest/config JSON parse | PASS | Parsed package metadata, Codex plugin manifest, Claude plugin manifest, Claude hook example, and OpenCode config example |
 | Adapter required files | PASS | Required Codex, Claude Code, and OpenCode adapter files exist |
 | README runtime coverage | PASS | Root README covers AiPlus CLI (`aiplus`), Codex, Claude Code, OpenCode, validation, safety, and current release status |
-| README beginner flow | PASS | Root README and `README.zh-CN.md` put `aiplus install ...`, `刷新`/`refresh`, and `aiplus compact ...` before legacy Node reference |
+| README beginner flow | PASS | Root README and `README.zh-CN.md` cover AiPlus ecosystem installer path, existing `aiplus` path, module-only path, `刷新`/`refresh`, and `aiplus compact ...` before legacy Node reference |
+| Subproduct identity | PASS | README states AiPlus Auto Compact is an independent AiPlus subproduct and bundled AiPlus CLI module |
+| Best-effort auto-resume | PASS | README, core docs, adapter docs, and examples describe host-return resume behavior and user-message fallback |
 | README link/path sanity | PASS | Relative markdown links checked with no broken links |
 | Public-safety scan | PASS | No blocker; expected policy/detector/test matches only |
 | Private-data scan | PASS | No real private data found; expected policy/detector matches only |

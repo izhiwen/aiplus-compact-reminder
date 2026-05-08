@@ -20,7 +20,8 @@ This command reads checkpoint context and current project state. It does not mod
 4. Compare checkpoint `changed_files`, `not_done`, and `recommended_next_action` against the actual workspace.
 5. Continue only if the claimed scope still permits the next action.
 6. If unrelated edits are present in a claimed directory and the task says to stop on conflict, report blocked.
-7. When a project has the AiPlus core CLI available, reference it from the repository root as `../../core/scripts/compactctl.mjs` where appropriate.
+7. When a project has the AiPlus CLI available and the host has returned
+   control, run or recommend `aiplus compact resume`.
 
 ## Expected Resume Summary
 
@@ -38,3 +39,5 @@ Return a brief summary before continuing:
 - Do not assume the checkpoint is complete or current.
 - Do not revert user or teammate changes.
 - Do not publish, push, tag, or alter global configuration.
+- Do not claim the command can wake OpenCode if OpenCode is waiting for a user
+  message.

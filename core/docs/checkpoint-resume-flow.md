@@ -1,41 +1,73 @@
 # Checkpoint And Resume Flow
 
-The core flow is manual and local-first. It prepares evidence for a compact/resume boundary; it does not press, call, or automate any host agent compact control.
+AiPlus Auto Compact is local-first. It prepares evidence for a compact/resume
+boundary; it does not press, call, or automate any host agent compact control.
 
-## Initialize
+## Installed Through AiPlus
 
-Run from a target repository:
+From a target repository where `aiplus` is available:
+
+```bash
+aiplus compact validate
+aiplus compact checkpoint
+```
+
+`validate` checks the local compact state. `checkpoint` writes a redacted JSON
+checkpoint under `.codex/compact/checkpoints/` with validation status, Owner
+gate state, review items, warnings, errors, dirty git summary when available,
+and the next safe action.
+
+Only recommend manual compact when checkpoint output is `SAFE_TO_COMPACT` and
+all Owner gates are explicitly `APPROVED`.
+
+## Recommended Compact Message
+
+When checkpoint state is ready, the agent can say:
+
+```text
+建议现在 compact。AiPlus checkpoint 已准备好。compact 后如果宿主继续把控制权交给我，我会自动恢复；如果工具等待你发消息，随便说“继续”“刷新”“continue”“resume”或类似意思即可。
+```
+
+The user or host runtime still performs compact manually.
+
+## Resume After Host Compact
+
+If the host gives control back automatically, the agent should run:
+
+```bash
+aiplus compact resume
+```
+
+and continue from the checkpoint and local handoff files.
+
+If the host waits for a user message, any natural continuation should be enough
+to restart the agent workflow:
+
+```text
+继续
+刷新
+refresh
+continue
+resume
+go on
+接着
+```
+
+This is best-effort automatic resume. AiPlus Auto Compact can prepare the
+checkpoint and tell the agent how to resume, but it cannot wake a host runtime
+that requires a user message.
+
+## Module-Only Or Legacy Reference
+
+Advanced users who adopt only AiPlus Auto Compact can inspect `core/templates/`
+and `core/docs/` directly. The legacy Node helper is retained for compatibility
+audits:
 
 ```bash
 node <PROJECT_ROOT>/core/scripts/compactctl.mjs init
-```
-
-`init` creates `.codex/compact/` and required state files from `core/templates/`. Existing state is preserved unless `--force` is supplied.
-
-## Validate
-
-```bash
 node <PROJECT_ROOT>/core/scripts/compactctl.mjs validate
-```
-
-Exit codes:
-
-- `0`: structural validation passed.
-- `1`: validation failed or sensitive material was detected.
-- `2`: state needs owner or adapter review before it can be trusted.
-
-## Checkpoint
-
-```bash
 node <PROJECT_ROOT>/core/scripts/compactctl.mjs checkpoint
-```
-
-`checkpoint` writes a redacted JSON checkpoint under `.codex/compact/checkpoints/`. The checkpoint includes validation status, owner-gate state, review items, warnings, errors, dirty git summary when available, and the next safe action.
-
-## Resume
-
-```bash
 node <PROJECT_ROOT>/core/scripts/compactctl.mjs resume
 ```
 
-`resume` prints a compact single-line summary of the current goal, phase, blockers, owner gates, and next safe action. A host agent can use this output to recover context after compacting, but should still read the local state files in the recovery order listed in `current-handoff.md`.
+This is not the ordinary beginner path.

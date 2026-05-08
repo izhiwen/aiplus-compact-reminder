@@ -17,6 +17,8 @@ This is a project-local command document. Do not modify global Claude Code confi
 3. Record only facts that are useful after compaction.
 4. If the user gave a checkpoint destination, write there only if it is inside the allowed project scope.
 5. If no destination is available, return the checkpoint packet in the chat.
+6. When the AiPlus CLI is available, run or recommend
+   `aiplus compact validate` and `aiplus compact checkpoint`.
 
 ## Packet Format
 
@@ -37,5 +39,6 @@ Return:
 ## Guardrails
 
 - Do not imply hooks are required or enabled by default.
-- Do not claim automatic recovery is complete without human or agent review.
+- Do not claim automatic recovery is guaranteed. Resume is best-effort when the
+  host returns control to the agent.
 - Do not edit files outside the current task's allowed scope.

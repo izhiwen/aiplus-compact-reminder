@@ -2,25 +2,44 @@
 
 [中文 README](README.zh-CN.md)
 
-AiPlus Auto Compact is the compact/checkpoint/resume workflow module used by
-the AiPlus CLI (`aiplus`). It helps Codex, Claude Code, and OpenCode keep
-project-local handoff state before and after a context compact.
+AiPlus Auto Compact is an independent AiPlus subproduct for compact,
+checkpoint, and resume handoffs. It can be used as a bundled module installed
+by the AiPlus CLI (`aiplus`), or inspected directly by users who only want the
+compact workflow.
 
-It does not click a compact button, call `/compact`, upload data, change global runtime settings, or make compact safe automatically. It prepares local files, validates common structure, writes checkpoints, and reminds the agent what to read next.
+Use it when a long Codex, Claude Code, or OpenCode session is close to context
+compaction and you want a cleaner local handoff. It helps the agent validate
+compact readiness, create a checkpoint before compact, and resume from that
+checkpoint after compact.
+
+It does not click a compact button, call `/compact`, upload data, change global
+runtime settings, or make compact safe automatically.
 
 ## Beginner Flow
 
-### 1. Install the module into your project
+### Path A: AiPlus ecosystem install
 
-If `aiplus` is already on your `PATH`, run this from the project you want to
-protect:
+When the AiPlus release installer is available, the intended one-command
+ecosystem path is:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/izhiwen/aiplus/main/install.sh | bash
+cd MyProject
+aiplus install codex
+```
+
+Current status: the public AiPlus repo exists, but no GitHub Release installer
+is live yet. Until that installer is published, use Path B if `aiplus` is
+already installed.
+
+### Path B: Existing `aiplus` command
 
 ```bash
 cd MyProject
 aiplus install codex
 ```
 
-For other runtimes:
+For other runtimes, use:
 
 ```bash
 aiplus install claude-code
@@ -30,23 +49,70 @@ aiplus install all
 
 The install is project-local. It may write `.aiplus/`, `.codex/compact/`, project `.claude/` files, project `.opencode/` files, and the AiPlus managed block in project `AGENTS.md`. It does not modify global Codex, Claude Code, OpenCode, shell, or package-manager configuration.
 
-### 2. Type this in your already-open agent session
-
-After installing in the same project, tell the active agent to refresh:
+Then type this in the already-open Codex, Claude Code, or OpenCode session:
 
 ```text
 刷新
 ```
 
-English also works:
+Or:
 
 ```text
 refresh
 ```
 
-Meaning: reread `AGENTS.md`, reread `.aiplus/AGENTS.aiplus.md`, read `.codex/compact/current-handoff.md` if present, enable AiPlus guidance, and continue the current task.
+Meaning: reread `AGENTS.md`, reread `.aiplus/AGENTS.aiplus.md`, read
+`.codex/compact/current-handoff.md` if present, enable AiPlus guidance, and
+continue the current task.
 
-### 3. Use compact commands during long work
+### Path C: Advanced module-only adoption
+
+If you only want AiPlus Auto Compact, you can read this repository directly,
+inspect `core/templates/`, `core/docs/`, and the runtime adapters, then copy or
+adapt the compact workflow into your project. This is useful for policy review,
+custom integrations, or migration from `codex-compact-protocol`.
+
+The module-only path is not the beginner install path. Keep the legacy Node
+helper in [Advanced: Legacy Node Reference](#advanced-legacy-node-reference) for
+audits and compatibility checks only.
+
+## What Happens Around Compact
+
+Before compact, the agent should run when available:
+
+```bash
+aiplus compact validate
+aiplus compact checkpoint
+```
+
+If the checkpoint is ready, the agent should recommend manual compact with
+language like:
+
+```text
+建议现在 compact。AiPlus checkpoint 已准备好。compact 后如果宿主继续把控制权交给我，我会自动恢复；如果工具等待你发消息，随便说“继续”“刷新”“continue”“resume”或类似意思即可。
+```
+
+After the host compact completes:
+
+- If the host gives control back automatically, the agent should run
+  `aiplus compact resume` and continue without requiring user input.
+- If the host requires a user message, any natural continuation should work:
+
+```text
+继续
+刷新
+refresh
+continue
+resume
+go on
+接着
+```
+
+This is best-effort automatic resume. AiPlus Auto Compact can prepare the
+checkpoint and tell the agent how to resume, but it cannot wake a host runtime
+that is waiting for the user.
+
+## Daily Commands
 
 ```bash
 aiplus status
@@ -57,20 +123,7 @@ aiplus compact resume
 aiplus uninstall --dry-run
 ```
 
-Before compact, run:
-
-```bash
-aiplus compact validate
-aiplus compact checkpoint
-```
-
 Only recommend manual compact after `checkpoint` returns `SAFE_TO_COMPACT` and every Owner gate is explicitly `APPROVED`. `UNKNOWN_PENDING` means `UNKNOWN_NEEDS_REVIEW`; `DENIED` blocks compact recommendation.
-
-After the user or host runtime completes compact, run:
-
-```bash
-aiplus compact resume
-```
 
 ## Runtime Choices
 
@@ -113,6 +166,8 @@ AiPlus Auto Compact can:
 - Validate required files, sections, enum values, policy JSON, version fields, Owner gates, next actions, and obvious sensitive patterns.
 - Write local checkpoint JSON under `.codex/compact/checkpoints/`.
 - Print resume-oriented state after compaction.
+- Support best-effort automatic resume when the host runtime returns control to
+  the agent after compact.
 - Keep runtime setup project-local by default.
 
 ## What It Cannot Automate
@@ -120,6 +175,7 @@ AiPlus Auto Compact can:
 AiPlus Auto Compact cannot:
 
 - Click UI controls, call `/compact`, or force any runtime to compact.
+- Wake a host runtime that is waiting for a user message after compact.
 - Verify that compaction is operationally appropriate for every project.
 - Detect every secret, private path, or personal-data pattern.
 - Replace human review of Owner gates.

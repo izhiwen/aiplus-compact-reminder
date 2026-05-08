@@ -17,12 +17,15 @@ aiplus compact checkpoint
 
 Use OpenCode's own compact or session-management controls manually after reviewing the checkpoint output.
 
-After compact:
+After compact, if OpenCode returns control automatically:
 
 ```bash
 cd <TARGET_PROJECT>
 aiplus compact resume
 ```
+
+If OpenCode waits for the user, send a natural continuation such as `继续`,
+`刷新`, `refresh`, `continue`, `resume`, `go on`, or `接着`.
 
 ## Synthetic Handoff Content
 

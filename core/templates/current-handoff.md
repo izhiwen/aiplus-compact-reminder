@@ -33,13 +33,14 @@ IN_PROGRESS
 ## Next 3 Actions
 
 1. Review all compact files for project-specific placeholders.
-2. Run `node <PROJECT_ROOT>/core/scripts/compactctl.mjs validate`.
-3. Run `node <PROJECT_ROOT>/core/scripts/compactctl.mjs checkpoint` before manual compact.
+2. Run `aiplus compact validate`.
+3. Run `aiplus compact checkpoint` before manual compact.
 
 ## Do Not Do
 
 - Do not include secrets, PII, raw audio, transcripts, provider payloads, or exact private paths.
 - Do not claim this protocol can trigger any host agent compact control.
+- Do not claim this protocol can wake a host runtime that is waiting for a user message.
 
 ## Recovery Order
 
@@ -57,3 +58,4 @@ IN_PROGRESS
 - Current phase is one allowed task/result status.
 - Next safe action is actionable.
 - No sensitive material is present.
+- If the host returns control after compact, run `aiplus compact resume`.
