@@ -217,6 +217,9 @@ aiplus secret-broker status
 Secret-consuming tools should be run through `aiplus secret-broker run --
 <command...>` only for an explicit action need. Do not print resolved secret
 values in compact guidance or handoff files.
+The child command receives the secret in its environment and can still print,
+log, transmit, or store it. Use `run --` only with trusted commands for the
+specific action.
 
 If validation is blocked by a real safety problem or denied Owner gate,
 `aiplus compact checkpoint` prints `BLOCKED_DO_NOT_COMPACT` and does not create a

@@ -132,6 +132,8 @@ user asks "secret 状态", "看看 secret", "检查 API key", or "API key 是否
 paste, compact, summarize, persist, or log secret values. If an explicit compact
 support action needs a key, use `aiplus secret-broker run -- <command...>` so the
 value enters only the child process environment.
+The child command can still print, log, transmit, or store its environment. Use
+`run --` only with trusted commands for the specific action.
 
 ## After Compact
 

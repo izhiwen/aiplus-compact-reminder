@@ -205,6 +205,8 @@ aiplus secret-broker status
 
 只有在明确 action need 下，才用 `aiplus secret-broker run -- <command...>` 给子进程
 注入 secret。不要在 compact guidance 或 handoff files 里打印 resolved secret value。
+child command 会在 environment 里收到 secret，仍可能自己 print、log、transmit 或
+store。只对可信且符合当前 action need 的命令使用 `run --`。
 
 ## 日常命令
 
