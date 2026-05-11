@@ -1,113 +1,86 @@
-# AiPlus Auto Compact
+# Compact Reminder
 
-[English README](README.md)
+[English](README.md)
 
-## 问题所在
+## The Problem
 
-Codex session 跑了三个小时。context window 快满了，agent 开始忘记对话一开始的需求。你手动触发 compact，丢了一半上下文。compact 后 agent 问"我们刚才在做什么？"你得重新解释任务、重新建立约束、凭记忆重建一切。每次长 session 都发生这种事，每次都在丢时间和上下文。
+你的会话 stalled，因为你忘记运行 `compact`，直到上下文窗口已经溢出。那时，agent 已经开始遗忘早期的需求，你只能在慌乱中执行 compact。
 
-## 它能做什么
+什么时候是 compact 的好时机，这一点并不清晰。任务中途 compact 意味着状态丢失；任务结束后再 compact 意味着浪费了机会。你没有安全交接点的信号。
 
-AiPlus Auto Compact 在 compact 发生前准备结构化交接。它把三样东西捕获进 checksum 验证的 capsule：
+未经准备的直接 compact 会破坏任务交接和连续性。你的 handoff 丢失，decision log 被截断，agent 在恢复后感到失忆。你必须重新解释任务、重新建立约束、并从记忆中重建一切。
 
-1. **Decision log** — 做了哪些决定及原因
-2. **Agent state ledger** — 当前任务状态、待解决问题和下一步行动
-3. **Evidence ledger** — 支撑上下文和参考
+## The Solution
 
-compact 后，`aiplus compact resume` 读取 capsule 并自动恢复上下文。agent 从断点继续，完全了解之前的决定和状态。如果 capsule 缺失或损坏，它会优雅地回退到 legacy handoff 格式。
+Compact Reminder 会在适当的时机主动提醒你 compact。它结合 token 阈值与任务交接点检测，让你在正确的时刻执行 compact，既不太早也不太晚。
 
-系统还监控 context 使用情况，主动建议 compact 时机。它估算 token 和成本节省，让你知道 compact 是否值得打断。
+在 compact 之前，它会自动准备结构化的 handoff：
 
-## 安装
+- **current-handoff** — 你正在做什么以及接下来做什么
+- **decision-log** — 已做出的决策及原因
+- **agent-state-ledger** — 当前任务状态、待解决问题、下一步行动
+- **evidence-ledger** — 支持性上下文和参考信息
 
-已安装 AiPlus：
+在 compact 之后，它通过 capsule 自动恢复。decision ledger 被提取并恢复，因此 agent 可以从它离开的确切位置继续，并完全了解先前的决策和状态。如果 capsule 丢失或损坏，它会优雅地回退到 legacy handoff 格式。
+
+## Quick Start
+
+### Bundled（推荐）
+
+如果你已经在使用 AiPlus：
 
 ```bash
+aiplus install
 cd MyProject
-aiplus install codex        # 或: claude-code, opencode, all
+aiplus compact init
 ```
 
-然后在 agent session 里说：
-
-```text
-帮我准备 compact
-```
-
-或使用 standalone 源码：
-
-```bash
-git clone https://github.com/izhiwen/aiplus-auto-compact.git
-cd aiplus-auto-compact
-```
-
-## Runtime 支持
-
-| Runtime | 安装命令 | Compact 支持 |
-|---------|---------|-------------|
-| Codex | `aiplus install codex` | 提醒、checkpoint 和 resume |
-| Claude Code | `aiplus install claude-code` | Reviewed hooks 和 commands |
-| OpenCode | `aiplus install opencode` | 项目级 command 工作流 |
-| 全部 | `aiplus install all` | 三个 runtime |
-
-## 工作原理
-
-**Compact 前：**
+然后使用你已经熟悉的子命令：
 
 ```bash
 aiplus compact remind       # 检查是否建议 compact
-aiplus compact prepare      # 构建 context capsule 和 handoff
-aiplus compact checkpoint   # 验证 readiness
-```
-
-agent 会报告 compact 是否安全、被阻塞或需要准备。
-
-**Compact 后：**
-
-```bash
-aiplus compact resume       # 从 capsule 恢复
+aiplus compact prepare      # 构建上下文 capsule 和 handoff
+aiplus compact checkpoint   # 在 compact 前验证就绪状态
+aiplus compact resume       # 在 compact 后从 capsule 恢复上下文
 aiplus compact savings      # 显示 token 和成本节省
 ```
 
-自然续接用语如 `继续`、`resume`、`go on`、`接着做` 也可以触发恢复。
-
-## 仓库结构
-
-- `core/templates/` — 含角色感知章节的 compact handoff 模板（Session Role、Workflow Level、Output Contract）
-- `core/schemas/` — context-capsule 和 reminder-state 验证的 JSON schema
-- `core/docs/protocol.md` — 完整 compact 协议参考
-- `adapters/codex/` — Codex compact 命令 plugin assets
-- `adapters/claude-code/` — Claude Code 命令和可选 hooks
-- `adapters/opencode/` — OpenCode compact 工作流命令和 prompts
-- `examples/` — 三个 runtime 的 synthetic examples
-- `core/scripts/compactctl.mjs` — 旧版 Node helper（已归档，仅用于兼容性测试）
-
-## 命令
+### Standalone
 
 ```bash
-# 准备
-aiplus compact remind       # 检查 compact 建议
-aiplus compact prepare      # 构建 capsule 和 handoff
-aiplus compact checkpoint   # 验证 readiness
-
-# Compact 后
-aiplus compact resume       # 从 capsule 恢复上下文
-aiplus compact savings      # 显示 token 和成本节省
+git clone https://github.com/izhiwen/aiplus-compact-reminder.git
+cd aiplus-compact-reminder
 ```
 
-## 安全
+CLI 子命令 `aiplus compact` 保持不变，以维持肌肉记忆。
 
-AiPlus Auto Compact 不：
-- 点击 UI 控件或替你调用 `/compact`
-- 唤醒等待用户输入的 host runtime
-- 检测所有可能的 secret 或私人模式（仅 structural checks）
-- 替代 Owner gates 的人工 review
+## What's Inside
+
+- `core/templates/` — 结构化 handoff 模板（current-handoff、decision-log、
+  agent-state-ledger、evidence-ledger）
+- `core/schemas/` — 用于 context-capsule 和状态验证的 JSON schema
+- `core/docs/protocol.md` — 完整的 compact 协议参考
+- `adapters/codex/` — Codex 适配器和 compact 命令
+- `adapters/claude-code/` — Claude Code 适配器和命令
+- `adapters/opencode/` — OpenCode 适配器和命令
+- `core/scripts/compactctl.mjs` — 遗留 Node 辅助脚本（归档，仅用于兼容性测试）
+
+## Safety Boundaries
+
+Compact Reminder 不会：
+
+- 替你点击 UI 控件或调用 `/compact`
+- 唤醒正在等待用户输入的主机运行时
+- 检测所有可能的秘密或隐私模式（仅进行结构性检查）
+- 替代人工审查 Owner gates
 - 上传 prompts、checkpoints 或 savings 数据
 
-## 更多信息
+## More Info
 
-见 [主 AiPlus 仓库](https://github.com/izhiwen/aiplus) 了解完整平台。
+访问 [AiPlus 主仓库](https://github.com/izhiwen/aiplus) 了解完整平台。
 
-当前缺口和计划工作：[v0.5.2 known gaps](https://github.com/izhiwen/aiplus/blob/main/docs/roadmap/v0.5.2-known-gaps.md)。
+当前已知缺口和计划中的工作：
+[v0.5.2 known gaps](https://github.com/izhiwen/aiplus/blob/main/docs/roadmap/v0.5.2-known-gaps.md)
 
 ## License
 
