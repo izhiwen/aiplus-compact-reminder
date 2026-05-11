@@ -1,44 +1,53 @@
-# Compact Reminder
-[简体中文](README.zh-CN.md)
+# AiPlus Compact Reminder
+[中文 README](README.zh-CN.md)
 
-## The Problem
+## The pain
 
-Your session stalls because you forget to run `compact` until the context window
-is already overflowing. By then, the agent has already started forgetting early
-requirements, and you are forced to compact in a panic.
+If you have ever run a long Codex / Claude Code / OpenCode session, you have
+probably hit all three of these:
 
-It is unclear when is a good time to compact. Mid-task compaction means state
-loss; end-of-task compaction means wasted opportunity. You have no signal for
-the safe handoff point.
+1. **You forget to compact.** You are deep in a feature, the agent is
+   producing code, and nobody is watching the token meter. By the time
+   anyone notices, the context window is already overflowing and the agent
+   has started forgetting early requirements.
+2. **You don't know when is a *good* time to compact.** Mid-task, and you
+   lose the half-finished state. End-of-task, and you missed the chance to
+   keep going on a fresh window. There is no obvious safe handoff point.
+3. **A direct compact breaks task handoff and continuity.** Without
+   preparation, the handoff is gone. The decision log is truncated. After
+   resume, the agent is amnesiac and asks questions it already had answers
+   to. You re-explain the task, re-establish constraints, rebuild context
+   from scratch.
 
-Direct compaction without preparation breaks task handoff and continuity. Your
-handoff is lost, the decision log is truncated, and the agent feels amnesiac
-after resume. You must re-explain the task, re-establish constraints, and
-reconstruct everything from memory.
+## What we do about it
 
-## The Solution
+AiPlus Compact Reminder turns compact from a panic operation into a planned
+one.
 
-Compact Reminder actively reminds you when compaction is appropriate. It
-combines a token threshold with task-handoff-point detection so you compact at
-the right moment, not too early and not too late.
+**It reminds you when it is appropriate to compact.** Not when the meter is
+already full. The signal combines a token threshold with task-handoff-point
+detection — so the recommendation lands at a natural seam in the work, not
+mid-sentence.
 
-Before compaction, it auto-prepares a structured handoff:
+**It auto-prepares a structured handoff before compaction:**
 
-- **current-handoff** — What you were doing and what comes next
-- **decision-log** — Decisions made and why
-- **agent-state-ledger** — Current task state, open questions, next actions
-- **evidence-ledger** — Supporting context and references
+- `current-handoff` — what you were doing, what comes next
+- `decision-log` — decisions made and why (so resume picks up the *reasoning*,
+  not just the code)
+- `agent-state-ledger` — current task state, open questions, planned actions
+- `evidence-ledger` — supporting context and references
 
-After compaction, it auto-resumes via the capsule. The decision ledger is
-extracted and restored, so the agent continues from the exact point it left off
-with full awareness of prior decisions and state. If the capsule is missing or
-malformed, it falls back to the legacy handoff format gracefully.
+**It auto-resumes after compaction.** The capsule is checksum-verified and
+extracted automatically. The decision ledger is restored, so the agent
+continues from the exact point it left off — with full memory of prior
+choices, not from zero.
 
-## Quick Start
+If the capsule is missing or malformed, it falls back to the legacy handoff
+format gracefully. You don't get stranded.
 
-### Bundled (recommended)
+## Quick start
 
-If you already use AiPlus:
+If you already have AiPlus installed:
 
 ```bash
 aiplus install
@@ -46,54 +55,51 @@ cd MyProject
 aiplus compact init
 ```
 
-Then use the subcommands you already know:
+Then the subcommands you would expect:
 
 ```bash
-aiplus compact remind       # Check if compaction is recommended
-aiplus compact prepare      # Build context capsule and handoff
-aiplus compact checkpoint   # Validate readiness before compact
-aiplus compact resume       # Restore context from capsule after compact
-aiplus compact savings      # Show token and cost savings
+aiplus compact remind        # check if compact is recommended right now
+aiplus compact prepare       # build the handoff + capsule
+aiplus compact checkpoint    # validate readiness before you compact
+aiplus compact resume        # restore from capsule after compact
+aiplus compact savings       # how many tokens and dollars this saved
 ```
 
-### Standalone
+Or as a standalone module:
 
 ```bash
 git clone https://github.com/izhiwen/aiplus-compact-reminder.git
 cd aiplus-compact-reminder
 ```
 
-The CLI subcommand `aiplus compact` is unchanged for muscle memory.
+The CLI subcommand `aiplus compact` is unchanged — your muscle memory still
+works.
 
-## What's Inside
+## What's inside
 
-- `core/templates/` — Structured handoff templates (current-handoff,
-  decision-log, agent-state-ledger, evidence-ledger)
-- `core/schemas/` — JSON schemas for context-capsule and state validation
-- `core/docs/protocol.md` — Complete compact protocol reference
-- `adapters/codex/` — Codex adapter and compact commands
+- `core/templates/` — handoff templates (current-handoff, decision-log,
+  agent-state-ledger, evidence-ledger)
+- `core/schemas/` — JSON schemas for context-capsule and reminder state
+- `core/docs/protocol.md` — full compact protocol reference
+- `adapters/codex/` — Codex adapter and `compact` commands
 - `adapters/claude-code/` — Claude Code adapter and commands
 - `adapters/opencode/` — OpenCode adapter and commands
-- `core/scripts/compactctl.mjs` — Legacy Node helper (archived, compatibility
-  tests only)
 
-## Safety Boundaries
+## Safety boundaries
 
-Compact Reminder does not:
+Compact Reminder is a preparation tool, not an autopilot. It does not:
 
-- Click UI controls or call `/compact` for you
-- Wake a host runtime that is waiting for user input
-- Detect every possible secret or private pattern (structural checks only)
-- Replace human review of Owner gates
-- Upload prompts, checkpoints, or savings data
+- click UI controls or call `/compact` for you (you still trigger compact)
+- wake a host runtime that is waiting for user input
+- detect every possible secret or private pattern (structural checks only)
+- replace human review of Owner gates
+- upload prompts, checkpoints, or savings data
 
-## More Info
+## More
 
-See the [main AiPlus repository](https://github.com/izhiwen/aiplus) for the
-complete platform.
-
-Current gaps and planned work:
-[v0.5.2 known gaps](https://github.com/izhiwen/aiplus/blob/main/docs/roadmap/v0.5.2-known-gaps.md)
+- Main platform: [aiplus](https://github.com/izhiwen/aiplus)
+- Tracked work before next release:
+  [v0.5.2 known gaps](https://github.com/izhiwen/aiplus/blob/main/docs/roadmap/v0.5.2-known-gaps.md)
 
 ## License
 
