@@ -1,5 +1,4 @@
 # Compact Reminder
-
 [English](README.md)
 
 ## The Problem
