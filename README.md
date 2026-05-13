@@ -1,36 +1,47 @@
 # AiPlus Compact Reminder
-[![CI](https://github.com/izhiwen/aiplus-compact-reminder/actions/workflows/ci.yml/badge.svg)](https://github.com/izhiwen/aiplus-compact-reminder/actions/workflows/ci.yml)
+[![CI](https://github.com/izhiwen/AiPlus-Compact-Reminder/actions/workflows/ci.yml/badge.svg)](https://github.com/izhiwen/AiPlus-Compact-Reminder/actions/workflows/ci.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
 [中文 README](README.zh-CN.md)
 
 ## The pain
 
-If you have ever run a long Codex / Claude Code / OpenCode session, you have
-probably hit all three of these:
+Long Codex / Claude Code / OpenCode sessions **burn tokens**. The same
+context gets reloaded again and again as the window fills, and by the time
+you compact, you have already paid the bill. Three specific failure modes
+combine to make this expensive:
 
-1. **You forget to compact.** You are deep in a feature, the agent is
-   producing code, and nobody is watching the token meter. By the time
-   anyone notices, the context window is already overflowing and the agent
-   has started forgetting early requirements.
+1. **The window is overflowing before you notice.** You are deep in a
+   feature, the agent is producing code, and nobody is watching the token
+   meter. By the time anyone notices, you have been re-paying for the same
+   context tokens on every turn.
 2. **You don't know when is a *good* time to compact.** Mid-task, and you
    lose the half-finished state. End-of-task, and you missed the chance to
-   keep going on a fresh window. There is no obvious safe handoff point.
+   keep going on a fresh window. There is no obvious safe handoff point —
+   so you keep burning tokens to defer the decision.
 3. **A direct compact breaks task handoff and continuity.** Without
    preparation, the handoff is gone. The decision log is truncated. After
    resume, the agent is amnesiac and asks questions it already had answers
    to. You re-explain the task, re-establish constraints, rebuild context
-   from scratch.
+   from scratch — burning *more* tokens to rebuild what you just lost.
+
+The net effect: a long session costs 3-5× what it should. The token meter
+is the single largest controllable cost in agent-driven development.
 
 ## What we do about it
 
-AiPlus Compact Reminder turns compact from a panic operation into a planned
-one.
+AiPlus Compact Reminder is built around one goal: **save tokens**. It does
+that by turning compact from a panic operation into a planned one with
+clean handoff and clean resume.
 
-**It reminds you when it is appropriate to compact.** Not when the meter is
-already full. The signal combines a token threshold with task-handoff-point
-detection — so the recommendation lands at a natural seam in the work, not
-mid-sentence.
+**It reminds you when it is appropriate to compact** — early enough to
+save tokens, late enough to keep useful context. The signal combines a
+token threshold with task-handoff-point detection, so the recommendation
+lands at a natural seam in the work, not mid-sentence.
+
+**It tells you how much you saved.** `aiplus compact savings` shows the
+token and dollar count avoided by compacting at the right moment versus
+letting the session run on.
 
 **It auto-prepares a structured handoff before compaction:**
 
@@ -68,11 +79,11 @@ aiplus compact resume        # restore from capsule after compact
 aiplus compact savings       # how many tokens and dollars this saved
 ```
 
-Or as a standalone module:
+Or install as a standalone module on an existing AiPlus project:
 
 ```bash
-git clone https://github.com/izhiwen/aiplus-compact-reminder.git
-cd aiplus-compact-reminder
+aiplus add compact-reminder
+aiplus install codex          # or: claude-code, opencode, all
 ```
 
 The CLI subcommand `aiplus compact` is unchanged — your muscle memory still
@@ -98,11 +109,22 @@ Compact Reminder is a preparation tool, not an autopilot. It does not:
 - replace human review of Owner gates
 - upload prompts, checkpoints, or savings data
 
+## Contributing
+
+We welcome contributions that stay within the plugin's scope (token-saving
+compact + structured resume, not a general session manager).
+
+1. **Open an issue first** for anything larger than a typo fix.
+2. **Run `aiplus compact remind` and `aiplus compact savings`** before and
+   after your change to confirm the token-saving signal still fires.
+3. **Adapter parity** — if you change CLI surface, update all three
+   adapters (`adapters/codex/`, `adapters/claude-code/`, `adapters/opencode/`).
+
 ## More
 
-- Main platform: [aiplus](https://github.com/izhiwen/aiplus)
+- Main platform: [AiPlus](https://github.com/izhiwen/AiPlus)
 - Tracked work before next release:
-  [v0.5.2 known gaps](https://github.com/izhiwen/aiplus/blob/main/docs/roadmap/v0.5.2-known-gaps.md)
+  [v0.5.2 known gaps](https://github.com/izhiwen/AiPlus/blob/main/docs/roadmap/v0.5.2-known-gaps.md)
 
 ## License
 
