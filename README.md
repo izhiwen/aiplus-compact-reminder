@@ -120,11 +120,24 @@ compact + structured resume, not a general session manager).
 3. **Adapter parity** — if you change CLI surface, update all three
    adapters (`adapters/codex/`, `adapters/claude-code/`, `adapters/opencode/`).
 
+## Honest disclosure
+
+- Single maintainer (Steve Zhiwen Wang, izhiwen on GitHub).
+- Token-savings numbers reported by `aiplus compact savings` are
+  estimates based on documented model pricing at compact time. Provider
+  pricing changes cause historical dollar estimates to drift; the
+  underlying compaction is correct, only the dollar estimate is
+  best-effort.
+- The compact-when-safe heuristic detects task-handoff points in agent
+  output. False negatives (missed handoff points) happen on unusual
+  session flows; false positives (premature compact recommendations)
+  are rarer.
+
 ## More
 
 - Main platform: [AiPlus](https://github.com/izhiwen/AiPlus)
 - Tracked work before next release:
-  [v0.5.2 known gaps](https://github.com/izhiwen/AiPlus/blob/main/docs/roadmap/v0.5.2-known-gaps.md)
+  [AiPlus release notes](https://github.com/izhiwen/AiPlus/releases)
 
 ## License
 
